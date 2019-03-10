@@ -1,0 +1,14 @@
+{% for year in years %}
+<div id="inputYear" class="form-group row">
+  <label for="inputYear1" class="col-sm-2 col-form-label">{{ year.graph_year }}</label>
+  <div class="col-md-3 col-sm-2">
+    <input class="form-control" id="inputTemp1" placeholder="0" value="{{ year.average_temperature }}">
+  </div>
+  <div class="col-md-3 col-sm-2">
+    <input class="form-control" id="inputPrecip1" placeholder="0" value="{{ year.average_precipitation }}">
+  </div>
+  <div class="col-md-3 col-sm-2">
+    <input class="form-control" id="inputEvent1" placeholder="Event" value="{{ year.event }}">
+  </div>
+</div>
+{% endfor %}

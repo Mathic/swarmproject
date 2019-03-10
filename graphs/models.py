@@ -15,25 +15,13 @@ class Student(models.Model):
 
 class GraphData(models.Model):
     graph_year = models.IntegerField()
-    average_temperature = models.DecimalField(max_digits=5, decimal_places=2)
-    average_precipitation = models.DecimalField(max_digits=5, decimal_places=2)
-    source_text = models.CharField(max_length=50)
-    latitude = models.DecimalField(max_digits=5, decimal_places=2)
-    longitude = models.DecimalField(max_digits=5, decimal_places=2)
+    average_temperature = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    average_precipitation = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    source_text = models.CharField(max_length=50, null=True, blank=True)
+    latitude = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    longitude = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     event = models.CharField(max_length=500, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.graph_year)
-
-    @property
-    def article_chart(self):
-        data = [
-            go.Bar(
-                x=[self.graph_year], # years
-                y=[self.average_temperature] # average_temperature
-            )
-        ]
-        plot_url = py.plot(data, filename='basic-bar')
-
-        return plot_url
