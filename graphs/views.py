@@ -32,7 +32,7 @@ class ClimateData(APIView):
         temperaturesVictoria = []
         precipitationVictoria = [ ]
 
-        climates = GraphData.objects.order_by('-graph_year')
+        climates = GraphData.objects.order_by('graph_year')
         for climate in climates:
             years.append(climate.graph_year)
             if (climate.source_text == "Ottawa CDA"):
@@ -50,5 +50,5 @@ class ClimateData(APIView):
             "climate_data4": precipitationVictoria
         }
 
-        print("temp: %s \n prec: %s"% (temperaturesOttawa, precipitationOttawa))
+        print("climates: %s \ntemp: %s \nprec: %s"% (climates, temperaturesOttawa, precipitationOttawa))
         return Response(data)
