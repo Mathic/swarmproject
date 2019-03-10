@@ -16,5 +16,6 @@ python_version = "3.6"
 django-heroku = "*"
 gunicorn = "*"
 djangorestframework = "*"
+plotly="*"
 
 [dev-packages]
