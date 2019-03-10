@@ -34,7 +34,8 @@ class ClimateData(APIView):
 
         climates = GraphData.objects.order_by('graph_year')
         for climate in climates:
-            years.append(climate.graph_year)
+            if climate.graph_year not in years:
+                years.append(climate.graph_year)
             if (climate.source_text == "Ottawa CDA"):
                 temperaturesOttawa.append(climate.average_temperature)
                 precipitationOttawa.append(climate.average_precipitation)
