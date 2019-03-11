@@ -1,4 +1,5 @@
 {% extends "graphs/base_template.html" %}
+{% load static %}
 
 {% block content %}
 
@@ -7,66 +8,19 @@
   <p class="lead">Ottawa average temperature and precipitation from 1929-2018</p>
 </div>
 
-  <div id="climateForm" class="form-group row" data-years-url="{% url 'ajax_load_years' %}">
-    <label for="inputName" clas="col-md-3 col-sm-2">Name</label>
-    <div class="col-md-4 col-sm-10">
-      <select id="inputName" class="form-control">
-        <option selected>---------</option>
-        {% for name in names %}
-          <option value="{{ name.id }}">{{ name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-md-3 col-sm-2">Year</label>
-    <label class="col-md-3 col-sm-2">Average Temperature</label>
-    <label class="col-md-3 col-sm-2">Average Precipitation</label>
-    <label class="col-md-3 col-sm-2">Event</label>
+<div id="climateForm" class="form-group row" data-years-url="{% url 'ajax_load_years' %}">
+  <label for="inputName" clas="col-md-3 col-sm-2">Name</label>
+  <div class="col-md-3 col-sm-10">
+    <select id="inputName" class="form-control">
+      <option selected>---------</option>
+      {% for name in names %}
+        <option value="{{ name.id }}">{{ name }}</option>
+      {% endfor %}
+    </select>
   </div>
   <div id="inputYear"></div>
-  <fieldset class="form-group">
-    <div class="row">
-      <legend class="col-form-label col-sm-2 pt-0">Source</legend>
-      <div class="col-sm-10">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-          <label class="form-check-label" for="gridRadios1">
-            Ottawa CDA
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-          <label class="form-check-label" for="gridRadios2">
-            Victoria Gonzales
-          </label>
-        </div>
-      </div>
-    </div>
-  </fieldset>
-  <div class="form-group row">
-    <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-  </div>
+</div>
 
-
-  <script>
-    $("#inputName").change(function () {
-      var url = $("#climateForm").attr("data-years-url");  // get the url of the `load_years` view
-      var nameId = $(this).val();  // get the selected student ID from the HTML input
-
-      $.ajax({                       // initialize an AJAX request
-        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-years/)
-        data: {
-          'student': nameId       // add the student id to the GET parameters
-        },
-        success: function (data) {   // `data` is the return of the `load_cities` view function
-          $("#inputYear").html(data);  // replace the contents of the year input with the data that came from the server
-        }
-      });
-
-    });
-  </script>
+<script type="text/javascript" src="{% static 'graphs/js/add-data.js' %}"></script>
 
 {% endblock %}

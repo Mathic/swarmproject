@@ -18,8 +18,8 @@ def add_data(request):
 def load_years(request):
     student_id = request.GET.get('student')
     years = GraphData.objects.filter(student=student_id).order_by('graph_year')
-
-    return render(request, 'graphs/year_options.html', {'years': years})
+    print(years[0].source_text)
+    return render(request, 'graphs/year_options.html', {'years': years, 'source': years[0]})
 
 class ClimateData(APIView):
     authentication_classes=[]
