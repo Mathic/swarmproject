@@ -22,9 +22,8 @@ body {
   }
 }
 
-.tableFixHead { overflow-y: auto; height: auto; }
+.tableFixHead { overflow-y: auto; height: 600px; }
 
-/* Just common table stuff. */
 table  { border-collapse: collapse; width: 100%; }
 th, td { padding: 8px 16px; }
 th     { background:#eee; }
