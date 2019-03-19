@@ -10,15 +10,15 @@
 <div id="years">
   {% for year in years %}
   <div id="{{ year.id }}" class="form-group row">
-    <label for="inputYear{{ year.id }}" class="col-sm-2 col-form-label">{{ year.graph_year }}</label>
+    <label for="inputYear{{ year.id }}" class="col-sm-2 col-form-label data">{{ year.graph_year }}</label>
     <div class="col-md-3 col-sm-2">
-      <input class="form-control temp" id="inputTemp{{ year.id }}" placeholder="0" value="{{ year.average_temperature }}">
+      <input class="form-control data" id="inputTemp{{ year.id }}" placeholder="0" value="{{ year.average_temperature }}">
     </div>
     <div class="col-md-3 col-sm-2">
-      <input class="form-control precip" id="inputPrecip{{ year.id }}" placeholder="0" value="{{ year.average_precipitation }}">
+      <input class="form-control data" id="inputPrecip{{ year.id }}" placeholder="0" value="{{ year.average_precipitation }}">
     </div>
     <div class="col-md-3 col-sm-2">
-      <input class="form-control event" id="inputEvent{{ year.id }}" placeholder="Event" value="{{ year.event }}">
+      <input class="form-control data" id="inputEvent{{ year.id }}" placeholder="Event" value="{{ year.event }}">
     </div>
   </div>
   {% endfor %}
@@ -59,12 +59,12 @@
 
   <label for="inputLat" clas="col-md-3 col-sm-2 col-form-label">Latitude</label>
   <div class="col-md-2 col-sm-2">
-    <input class="form-control" id="inputLat" placeholder="0" value="{{ source.latitude }}">
+    <input class="form-control data" id="inputLat" placeholder="0" value="{{ source.latitude }}">
   </div>
 
   <label for="inputLong" clas="col-md-3 col-sm-2">Longitude</label>
   <div class="col-md-2 col-sm-2">
-    <input class="form-control" id="inputLong" placeholder="0"  value="{{ source.longitude }}"">
+    <input class="form-control data" id="inputLong" placeholder="0"  value="{{ source.longitude }}"">
   </div>
 
   <div class="col-md-2 col-sm-10">

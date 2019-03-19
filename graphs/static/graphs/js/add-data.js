@@ -15,18 +15,34 @@ $("#inputName").change(function () {
 });
 
 $("#addData").click(function() {
+  var url = $("#climateForm").attr("data-save-url");
   var radioValue = $("input[name='sourceRadios']:checked").val();
   var climates = [];
+  var student_id = $("#inputName").val();
 
-  if(radioValue){
-    alert("Your are - " + radioValue);
-  };
+  $('#inputYear').find('.data').each(function() {
+    if($(this).val() == ""){
+      climates.push($(this).text());
+    } else {
+      climates.push($(this).val());
+    }
+  });
 
-  $('#years').find('.temp').each(function() {
-    alert($(this).val());
-    // $(this).css({
-    //   "color": "green",
-    //   "border": "2px solid green"
-    // });
-  })
+  $.ajax({
+    url: url,
+    data: {
+      'climates': climates,
+      'source': radioValue,
+      'student_id': student_id
+    },
+    success: function (data) {
+      // console.log(climates);
+      $("#success-alert").show();
+      $("#success-alert").fadeOut(3250);
+    },
+    error: function() {
+      $("#error-alert").show();
+      $("#error-alert").fadeOut(3250);
+    }
+  });
 })

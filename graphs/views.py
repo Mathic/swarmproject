@@ -15,10 +15,26 @@ def add_data(request):
 
     return render(request, 'graphs/add_data.html', {'names': names})
 
+def save_data(request):
+    source = request.GET.get('source')
+    climates = request.GET.getlist('climates[]')
+    student_id = request.GET.get('student_id')
+
+    years = GraphData.objects.filter(student=student_id)
+    first_year = years.filter(graph_year=climates[0])
+    second_year = years.filter(graph_year=climates[4])
+    third_year = years.filter(graph_year=climates[8])
+
+    first_year.update(average_temperature=climates[1], average_precipitation=climates[2], event=climates[3], latitude=climates[12], longitude=climates[13], source_text=source)
+    second_year.update(average_temperature=climates[5], average_precipitation=climates[6], event=climates[7], latitude=climates[12], longitude=climates[13], source_text=source)
+    second_year.update(average_temperature=climates[9], average_precipitation=climates[10], event=climates[11], latitude=climates[12], longitude=climates[13], source_text=source)
+
+    return render(request, 'graphs/add_data.html')
+
 def load_years(request):
     student_id = request.GET.get('student')
     years = GraphData.objects.filter(student=student_id).order_by('graph_year')
-    print(years[0].source_text)
+
     return render(request, 'graphs/year_options.html', {'years': years, 'source': years[0]})
 
 class ClimateData(APIView):
@@ -51,5 +67,4 @@ class ClimateData(APIView):
             "climate_data4": precipitationVictoria
         }
 
-        print("climates: %s \ntemp: %s \nprec: %s"% (climates, temperaturesOttawa, precipitationOttawa))
         return Response(data)

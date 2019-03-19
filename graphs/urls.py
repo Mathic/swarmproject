@@ -8,4 +8,5 @@ urlpatterns = [
     path('add', views.add_data, name='add_data'),
 
     path('ajax/load-years', views.load_years, name='ajax_load_years'),
+    path('ajax/save-data', views.save_data, name='ajax_save_data'),
 ]
