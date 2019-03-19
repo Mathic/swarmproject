@@ -1,0 +1,56 @@
+{% extends "graphs/base_template.html" %}
+{% load static %}
+
+{% block content %}
+<div class="tableFixHead">
+  <table class="table table-sm table-striped scroll">
+    <thead>
+      <tr>
+        <th scope="col" rowspan="2">Year</th>
+        <th scope="col" colspan="2">Average</th>
+        <th scope="col" rowspan="2">Source</th>
+        <th scope="col" rowspan="2">Latitude</th>
+        <th scope="col" rowspan="2">Longitude</th>
+        <th scope="col" rowspan="2">Event</th>
+      </tr>
+      <tr>
+        <th scope="col">Temperature</th>
+        <th scope="col">Precipitation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for year in years %}
+      <!-- {{ year.student }} -->
+      <tr>
+        <td>{{ year }}</td>
+        <td>{{ year.average_temperature }}</td>
+        <td>{{ year.average_precipitation }}</td>
+        <td>{{ year.source_text }}</td>
+        <td>{{ year.latitude }}</td>
+        <td>{{ year.longitude }}</td>
+        <td>{{ year.event }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!-- {% for year in years %}
+{{ year.student }}
+{{ year }}
+{{ year.average_temperature }}
+{{ year.average_precipitation }}
+
+{{ year.source_text }}
+{{ year.latitude }}
+{{ year.longitude }}
+{{ year.event }}
+{% endfor %} -->
+
+<script type="text/javascript">
+  var $th = $('.tableFixHead').find('thead th')
+  $('.tableFixHead').on('scroll', function() {
+    $th.css('transform', 'translateY('+ this.scrollTop +'px)');
+  });
+</script>
+
+{% endblock %}

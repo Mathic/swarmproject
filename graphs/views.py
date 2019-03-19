@@ -9,6 +9,11 @@ from .models import GraphData, Student
 def index(request):
     return render(request, 'graphs/index.html')
 
+def data(request):
+    years = GraphData.objects.order_by('graph_year')
+
+    return render(request, 'graphs/data.html', {'years': years})
+
 def add_data(request):
     names = Student.objects.all()
     form = request.POST
