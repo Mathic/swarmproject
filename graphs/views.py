@@ -7,18 +7,19 @@ from .models import GraphData, Student
 
 # Create your views here.
 def index(request):
-    return render(request, 'graphs/index.html')
+    return render(request, 'graphs/index.html', {'nbar': 'graph'})
 
 def data(request):
-    years = GraphData.objects.order_by('graph_year')
+    ottawa = GraphData.objects.filter(source_text='Ottawa CDA').order_by('graph_year')
+    victoria = GraphData.objects.filter(source_text='Victoria Gonzales').order_by('graph_year')
 
-    return render(request, 'graphs/data.html', {'years': years})
+    return render(request, 'graphs/data.html', {'ottawa': ottawa, 'victoria': victoria, 'nbar': 'data'})
 
 def add_data(request):
     names = Student.objects.all()
     form = request.POST
 
-    return render(request, 'graphs/add_data.html', {'names': names})
+    return render(request, 'graphs/add_data.html', {'names': names, 'nbar': 'add'})
 
 def save_data(request):
     source = request.GET.get('source')
