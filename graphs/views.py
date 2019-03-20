@@ -29,15 +29,26 @@ def data(request):
     return render(request, 'graphs/data.html', {'ottawa': ottawa, 'victoria': victoria, 'nbar': 'data'})
 
 def data_m(request):
-    years = GraphData.objects.all()
+    years = GraphData.objects.order_by('graph_year').values_list('graph_year', flat=True).distinct()
 
     return render(request, 'graphs/data_m.html', {'years': years, 'nbar': 'data'})
 
 def load_months(request):
-    year_id = request.GET.get('yearId')
-    months = Month.objects.filter(year=year_id)
+    ottawa = []
+    victoria = []
+    year = request.GET.get('year')
+    years = GraphData.objects.filter(graph_year=year)
+    # print(years)
+    # months = Month.objects.filter(year=year_id)
+    for y in years:
+        if y.source_text == 'Ottawa CDA':
+            ottawa = Month.objects.filter(year=y.id)
+        else:
+            victoria = Month.objects.filter(year=y.id)
 
-    return render(request, 'graphs/month_options.html', {'months': months})
+    print(ottawa)
+
+    return render(request, 'graphs/month_options.html', {'ottawa': ottawa, 'victoria': victoria})
 
 def add_data(request):
     names = Student.objects.all()

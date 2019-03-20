@@ -1,7 +1,54 @@
-<hr>
-{% for month in months %}
+
+<!-- <hr>
+{% for month in ottawa %}
 {{ month }}
 {{ month.total_temperature }}
 {{ month.total_precipitation }}
 <hr>
-{% endfor %}
+{% endfor %} -->
+
+<div class="row">
+  <div class="col-md-6 col-sm-6">
+    <h1>Ottawa CDA</h1>
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Temperature</th>
+          <th>Total Precipitation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for month in ottawa %}
+        <tr>
+          <td>{{ month }}</td>
+          <td>{{ month.total_temperature }}</td>
+          <td>{{ month.total_precipitation }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-6 col-sm-6">
+    <h1>Victoria Gonzales</h1>
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Temperature</th>
+          <th>Total Precipitation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for month in victoria %}
+        <tr>
+          <td>{{ month }}</td>
+          <td>{{ month.total_temperature }}</td>
+          <td>{{ month.total_precipitation }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

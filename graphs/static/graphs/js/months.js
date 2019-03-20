@@ -1,11 +1,13 @@
 $("#inputYear").change(function () {
   var url = $("#dataMonth").attr("data-months-url");
-  var yearId = $(this).val();
+  var year = $(this).val();
+
+  console.log(year)
 
   $.ajax({
     url: url,
     data: {
-      'yearId': yearId
+      'year': year
     },
     success: function (data) {
       $("#months").html(data);
