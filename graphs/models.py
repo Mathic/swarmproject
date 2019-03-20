@@ -18,10 +18,19 @@ class GraphData(models.Model):
     average_temperature = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     average_precipitation = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     source_text = models.CharField(max_length=50, null=True, blank=True)
-    latitude = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    longitude = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    latitude = models.DecimalField(max_digits=5, decimal_places=3, default=0)
+    longitude = models.DecimalField(max_digits=5, decimal_places=3, default=0)
     event = models.CharField(max_length=500, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.graph_year)
+
+class Month(models.Model):
+    month = models.CharField(max_length=3)
+    total_temperature = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    total_precipitation = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    year = models.ForeignKey(GraphData, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.month)

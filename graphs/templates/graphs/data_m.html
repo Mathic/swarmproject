@@ -1,0 +1,51 @@
+{% extends "graphs/base_template.html" %}
+{% load static %}
+
+{% block content %}
+Data Month
+
+<div id="dataMonth" data-months-url="{% url 'ajax_load_months' %}" class="form-group row">
+  <fieldset class="form-group col-md-4">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">Source</legend>
+      <div class="col-sm-10">
+        <div class="form-check">
+          {% if source.source_text == "Ottawa CDA" %}
+          <input class="form-check-input" type="radio" name="sourceRadios" id="ottawaRadio" value="Ottawa CDA" checked>
+          {% else %}
+          <input class="form-check-input" type="radio" name="sourceRadios" id="ottawaRadio" value="Ottawa CDA">
+          {% endif %}
+
+          <label id="ottawaRadioLabel" class="form-check-label" for="ottawaRadio">
+            Ottawa CDA
+          </label>
+        </div>
+        <div class="form-check">
+          {% if source.source_text == "Victoria Gonzales" %}
+          <input class="form-check-input" type="radio" name="sourceRadios" id="victoriaRadio" value="Victoria Gonzales" checked>
+          {% else %}
+          <input class="form-check-input" type="radio" name="sourceRadios" id="victoriaRadio" value="Victoria Gonzales">
+          {% endif %}
+
+          <label id="victoriaRadioLabel" class="form-check-label" for="victoriaRadio">
+            Victoria Gonzales
+          </label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</div>
+
+<div class="col-md-3 col-sm-10">
+  <select id="inputYear" class="form-control">
+    <option selected>---------</option>
+    {% for year in years %}
+    <option value="{{ year.id }}">{{ year }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div id="months" class=""></div>
+
+<script type="text/javascript" src="{% static 'graphs/js/months.js' %}"></script>
+{% endblock %}
