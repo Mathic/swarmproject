@@ -102,26 +102,44 @@ def save_data(request):
     return render(request, 'graphs/add_data.html')
 
 class ClimateData(APIView):
-    authentication_classes=[]
-    permission_classes=[]
 
     def get(self, request, format=None):
-        years = []
+        climates = GraphData.objects.order_by('graph_year')
+        years = climates.values_list('graph_year', flat=True).distinct()
         temperaturesOttawa = []
         precipitationOttawa = []
         temperaturesVictoria = []
         precipitationVictoria = []
+        tempDiffOttawa = []
+        tempDiffVictoria = []
 
-        climates = GraphData.objects.order_by('graph_year')
+        i = 0
+        j = 0
+
         for climate in climates:
-            if climate.graph_year not in years:
-                years.append(climate.graph_year)
             if (climate.source_text == "Ottawa CDA"):
                 temperaturesOttawa.append(climate.average_temperature)
                 precipitationOttawa.append(climate.average_precipitation)
+                if climate.average_temperature != 0:
+                    i += 1
             else:
                 temperaturesVictoria.append(climate.average_temperature)
                 precipitationVictoria.append(climate.average_precipitation)
+                if climate.average_temperature != 0:
+                    j += 1
+
+        if i != 0:
+            avgTotalTempOttawa = sum(temperaturesOttawa[0:len(temperaturesOttawa)])/i
+            print(avgTotalTempOttawa)
+        if j != 0:
+            avgTotalTempVictoria = sum(temperaturesVictoria[0:len(temperaturesVictoria)])/j
+            print(avgTotalTempVictoria)
+
+        for k in range(len(temperaturesOttawa)):
+            # print(avgTotalTempOttawa)
+            tempDiffOttawa.append(temperaturesOttawa[k] - avgTotalTempOttawa)
+
+        print(tempDiffOttawa)
 
         data = {
             "climate_labels": years,

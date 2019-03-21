@@ -15,11 +15,11 @@ class Student(models.Model):
 
 class GraphData(models.Model):
     graph_year = models.IntegerField()
-    average_temperature = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    average_precipitation = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    average_temperature = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+    average_precipitation = models.DecimalField(max_digits=6, decimal_places=3, default=0)
     source_text = models.CharField(max_length=50, null=True, blank=True)
-    latitude = models.DecimalField(max_digits=5, decimal_places=3, default=0)
-    longitude = models.DecimalField(max_digits=5, decimal_places=3, default=0)
+    latitude = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+    longitude = models.DecimalField(max_digits=6, decimal_places=3, default=0)
     event = models.CharField(max_length=500, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
