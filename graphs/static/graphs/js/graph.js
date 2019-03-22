@@ -2,12 +2,12 @@ $(document).ready(function(){
   var endpoint = 'api/chart/data'
   var climeLabels = []
   var climateData1 = climateData2 = climateData3 = climateData4 = []
+  $("#loading-alert").show();
 
   $.ajax({
     method: "GET",
     url: endpoint,
     success: function(data){
-      $("#loading-alert").show();
       climateLabels = data.climate_labels
       climateData1 = data.climate_data1
       climateData2 = data.climate_data2
@@ -105,7 +105,7 @@ $(document).ready(function(){
     var data = [trace2, trace4];
 
     var layout = {
-      title: "Precipitation (mm)",
+      title: "Average yearly precipitation in mm",
       legend: {
         x: 0.25,
         y: 1
@@ -114,7 +114,7 @@ $(document).ready(function(){
         title: 'Precipitation (mm)',
         side: 'right',
         overlaying: 'y',
-        range: [-40, 160],
+        range: [0, 140],
         nticks: 11,
       }
     };

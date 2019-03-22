@@ -3,11 +3,12 @@ $(document).ready(function(){
   var climeLabels = []
   var climateData1 = climateData2 = climateData3 = climateData4 = []
 
+  $("#loading-alert").show();
+
   $.ajax({
     method: "GET",
     url: endpoint,
     success: function(data){
-      $("#loading-alert").show();
       month_names = data.month_names
       vmonths_temp = data.vmonths
       omonths_temp = data.omonths
