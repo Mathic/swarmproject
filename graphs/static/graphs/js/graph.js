@@ -112,7 +112,7 @@ $(document).ready(function(){
       },
       yaxis: {
         title: 'Precipitation (mm)',
-        side: 'right',
+        side: 'left',
         overlaying: 'y',
         range: [0, 140],
         nticks: 11,

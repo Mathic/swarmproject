@@ -15,7 +15,6 @@ def test(request):
         for t in twelve:
             if months.filter(month=t).first() == None:
                 month_instance = Month.objects.create(month=t, year=y)
-                print(month_instance)
 
     return render(request, 'graphs/test.html')
 
@@ -50,8 +49,6 @@ def load_months(request):
         else:
             victoria = Month.objects.filter(year=y.id)
             vevent = y.event
-
-    print(ottawa)
 
     return render(request, 'graphs/month_options.html', {'ottawa': ottawa, 'victoria': victoria, 'oevent': oevent, 'vevent': vevent})
 
@@ -93,11 +90,8 @@ def save_data(request):
             this_precip = float(this_month.values_list('total_precipitation', flat=True)[0])
             if (this_temp - float(temp1[i])) != 0.0:
                 this_month.update(total_temperature=float(temp1[i]))
-                print(this_month.values_list('total_temperature', flat=True)[0])
             if (this_precip - float(precip1[i])) != 0.0:
                 this_month.update(total_precipitation=float(precip1[i]))
-                print(float(this_month.values_list('total_precipitation', flat=True)[0]) - float(precip1[i]))
-                print(float(precip1[i]))
             i += 1
 
     first_year.update(average_temperature=climates[1], average_precipitation=climates[2], event=climates[3], latitude=climates[12], longitude=climates[13], source_text=source)
@@ -135,18 +129,14 @@ class ClimateData(APIView):
 
         if i != 0:
             avgTotalTempOttawa = sum(temperaturesOttawa[0:len(temperaturesOttawa)])/i
-            print(avgTotalTempOttawa)
         if j != 0:
             avgTotalTempVictoria = sum(temperaturesVictoria[0:len(temperaturesVictoria)])/j
-            print(avgTotalTempVictoria)
 
         for k in range(len(temperaturesOttawa)):
             tempDiffOttawa.append(temperaturesOttawa[k] - avgTotalTempOttawa)
 
         for k in range(len(temperaturesVictoria)):
             tempDiffVictoria.append(temperaturesVictoria[k] - avgTotalTempVictoria)
-
-        print(tempDiffOttawa)
 
         data = {
             "climate_labels": years,
@@ -254,9 +244,6 @@ class MonthlyData(APIView):
         for k in range(len(vmonths)):
             vmonths[k] = vmonths[k]/j
             vmonths_p[k] = vmonths_p[k]/j
-
-        print(omonths)
-        print(vmonths)
 
         data = {
             'month_names': month_names,
