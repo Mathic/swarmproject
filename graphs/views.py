@@ -39,19 +39,21 @@ def data_m(request):
 def load_months(request):
     ottawa = []
     victoria = []
+    oevent = vevent = ''
     year = request.GET.get('year')
     years = GraphData.objects.filter(graph_year=year)
-    # print(years)
-    # months = Month.objects.filter(year=year_id)
+
     for y in years:
         if y.source_text == 'Ottawa CDA':
             ottawa = Month.objects.filter(year=y.id)
+            oevent = y.event
         else:
             victoria = Month.objects.filter(year=y.id)
+            vevent = y.event
 
     print(ottawa)
 
-    return render(request, 'graphs/month_options.html', {'ottawa': ottawa, 'victoria': victoria})
+    return render(request, 'graphs/month_options.html', {'ottawa': ottawa, 'victoria': victoria, 'oevent': oevent, 'vevent': vevent})
 
 def add_data(request):
     names = Student.objects.all()

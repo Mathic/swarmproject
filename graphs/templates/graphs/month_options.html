@@ -1,12 +1,4 @@
 
-<!-- <hr>
-{% for month in ottawa %}
-{{ month }}
-{{ month.total_temperature }}
-{{ month.total_precipitation }}
-<hr>
-{% endfor %} -->
-
 <div class="row">
   <div class="col-md-6 col-sm-6">
     <h1>Ottawa CDA</h1>
@@ -26,6 +18,9 @@
           <td>{{ month.total_precipitation }}</td>
         </tr>
         {% endfor %}
+        <tr>
+          <td colspan="3">Event: {{ oevent }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -48,6 +43,9 @@
           <td>{{ month.total_precipitation }}</td>
         </tr>
         {% endfor %}
+        <tr>
+          <td colspan="3">Event: {{ vevent }}</td>
+        </tr>
       </tbody>
     </table>
   </div>

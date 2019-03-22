@@ -53,7 +53,6 @@ $("#addData").click(function() {
       'student_id': student_id
     },
     success: function (data) {
-      // console.log(climates);
       $("#success-alert").show();
       $("#success-alert").fadeOut(3250);
     },

@@ -7,6 +7,7 @@ $(document).ready(function(){
     method: "GET",
     url: endpoint,
     success: function(data){
+      $("#loading-alert").show();
       climateLabels = data.climate_labels
       climateData1 = data.climate_data1
       climateData2 = data.climate_data2
@@ -15,6 +16,9 @@ $(document).ready(function(){
 
       avTempChart()
       precipitationChart()
+      $("#loading-alert").hide();
+      $("#success-alert").show();
+      $("#success-alert").fadeOut(3250);
     },
     error: function(error_data){
       console.log("error")

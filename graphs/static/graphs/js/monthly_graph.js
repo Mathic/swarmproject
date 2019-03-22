@@ -7,6 +7,7 @@ $(document).ready(function(){
     method: "GET",
     url: endpoint,
     success: function(data){
+      $("#loading-alert").show();
       month_names = data.month_names
       vmonths_temp = data.vmonths
       omonths_temp = data.omonths
@@ -15,6 +16,14 @@ $(document).ready(function(){
 
       avTempChart()
       precipitationChart()
+      // setTimeout(function(){
+      //   $("#loading-alert").hide();
+      //   $("#success-alert").show();
+      //   $("#success-alert").fadeOut(3250);
+      // }, 3000);
+      $("#loading-alert").hide();
+      $("#success-alert").show();
+      $("#success-alert").fadeOut(3250);
     },
     error: function(error_data){
       console.log("error")
