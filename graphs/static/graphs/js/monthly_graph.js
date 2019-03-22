@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var endpoint = 'api/chart/data'
+  var endpoint = 'api/chart/monthly-data'
   var climeLabels = []
   var climateData1 = climateData2 = climateData3 = climateData4 = []
 
@@ -7,11 +7,11 @@ $(document).ready(function(){
     method: "GET",
     url: endpoint,
     success: function(data){
-      climateLabels = data.climate_labels
-      climateData1 = data.climate_data1
-      climateData2 = data.climate_data2
-      climateData3 = data.climate_data3
-      climateData4 = data.climate_data4
+      month_names = data.month_names
+      vmonths_temp = data.vmonths
+      omonths_temp = data.omonths
+      vmonths_p = data.vmonths_p
+      omonths_p = data.omonths_p
 
       avTempChart()
       precipitationChart()
@@ -23,8 +23,8 @@ $(document).ready(function(){
 
   function avTempChart(){
     var trace1 = {
-      x: climateLabels,
-      y: climateData1,
+      x: month_names,
+      y: omonths_temp,
       type: 'scatter',
       mode: 'lines+markers',
       name: 'Ottawa',
@@ -37,8 +37,8 @@ $(document).ready(function(){
     }
 
     var trace3 = {
-      x: climateLabels,
-      y: climateData3,
+      x: month_names,
+      y: vmonths_temp,
       type: 'scatter',
       mode: 'lines+markers',
       name: 'Victoria',
@@ -53,15 +53,15 @@ $(document).ready(function(){
     var data = [trace1, trace3];
 
     var layout = {
-      title: "Yearly average temperature compared to the 1929-2018 average (at 0°C)",
+      title: "Monthly average temperature from 1929-2018",
       legend: {
         x: 0.25,
         y: 1
       },
       yaxis: {
-        title: 'Temperature difference (°C)',
+        title: 'Temperature (°C)',
         rangemode: 'nonnegative',
-        range: [-2, 2],
+        range: [-30, 30],
         nticks: 5,
       }
     };
@@ -71,8 +71,8 @@ $(document).ready(function(){
 
   function precipitationChart(){
     var trace2 = {
-      x: climateLabels,
-      y: climateData2,
+      x: month_names,
+      y: omonths_p,
       type: 'scatter',
       mode: 'lines+markers',
       name: 'Ottawa',
@@ -85,8 +85,8 @@ $(document).ready(function(){
     }
 
     var trace4 = {
-      x: climateLabels,
-      y: climateData4,
+      x: month_names,
+      y: vmonths_p,
       type: 'scatter',
       mode: 'lines+markers',
       name: 'Victoria',
@@ -101,16 +101,16 @@ $(document).ready(function(){
     var data = [trace2, trace4];
 
     var layout = {
-      title: "Precipitation (mm)",
+      title: "Monthly average precipitation from 1929-2018",
       legend: {
         x: 0.25,
         y: 1
       },
       yaxis: {
         title: 'Precipitation (mm)',
-        side: 'right',
+        side: 'left',
         overlaying: 'y',
-        range: [-40, 160],
+        range: [0, 140],
         nticks: 11,
       }
     };
