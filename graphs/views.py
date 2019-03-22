@@ -260,11 +260,13 @@ def calculateMonthlyAverage():
 
     for k in range(len(omonths)):
         m_update = MonthlyAverage.objects.filter(month=month_names[k])
-        m_update.update(ottawa_average_t=omonths[k]/i, ottawa_average_p=omonths_p[k]/i)
+        if i != 0:
+            m_update.update(ottawa_average_t=omonths[k]/i, ottawa_average_p=omonths_p[k]/i)
 
     for k in range(len(vmonths)):
         m_update = MonthlyAverage.objects.filter(month=month_names[k])
-        m_update.update(victoria_average_t=vmonths[k]/j, victoria_average_p=vmonths_p[k]/j)
+        if j != 0:
+            m_update.update(victoria_average_t=vmonths[k]/j, victoria_average_p=vmonths_p[k]/j)
 
 def calculateYearlyAverage():
     climates = GraphData.objects.order_by('graph_year')
