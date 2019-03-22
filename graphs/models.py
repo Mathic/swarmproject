@@ -26,6 +26,26 @@ class GraphData(models.Model):
     def __str__(self):
         return str(self.graph_year)
 
+class YearlyAverage(models.Model):
+    year = models.IntegerField()
+    ottawa_average_t = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+    ottawa_average_p = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+    victoria_average_t = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+    victoria_average_p = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+
+    def __str__(self):
+        return str(self.year)
+
+class MonthlyAverage(models.Model):
+    month = models.CharField(max_length=3)
+    ottawa_average_t = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+    ottawa_average_p = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+    victoria_average_t = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+    victoria_average_p = models.DecimalField(max_digits=6, decimal_places=3, default=0)
+
+    def __str__(self):
+        return str(self.month)
+
 class Month(models.Model):
     month = models.CharField(max_length=3)
     total_temperature = models.DecimalField(max_digits=5, decimal_places=2, default=0)
