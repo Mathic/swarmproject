@@ -119,16 +119,17 @@ class ClimateData(APIView):
         i = j = avgTotalTempVictoria = avgTotalTempOttawa = 0
 
         for climate in climates:
-            if (climate.source_text == "Ottawa CDA"):
-                temperaturesOttawa.append(climate.average_temperature)
-                precipitationOttawa.append(climate.average_precipitation)
-                if climate.average_temperature != 0:
-                    i += 1
-            else:
-                temperaturesVictoria.append(climate.average_temperature)
-                precipitationVictoria.append(climate.average_precipitation)
-                if climate.average_temperature != 0:
-                    j += 1
+            if climate.latitude != 0.0:
+                if (climate.source_text == "Ottawa CDA"):
+                    temperaturesOttawa.append(climate.average_temperature)
+                    precipitationOttawa.append(climate.average_precipitation)
+                    if climate.average_temperature != 0:
+                        i += 1
+                else:
+                    temperaturesVictoria.append(climate.average_temperature)
+                    precipitationVictoria.append(climate.average_precipitation)
+                    if climate.average_temperature != 0:
+                        j += 1
 
         if i != 0:
             avgTotalTempOttawa = sum(temperaturesOttawa[0:len(temperaturesOttawa)])/i
@@ -167,82 +168,82 @@ class MonthlyData(APIView):
         vmonths_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         for m in months:
-            if (m.year.source_text == "Ottawa CDA"):
-                # print("%s %s %s"% (m.month, m.total_temperature, month_names[0]))
-                if (m.month == month_names[0]):
-                    omonths[0] += m.total_temperature
-                    omonths_p[0] += m.total_precipitation
-                    i += 1
-                if (m.month == month_names[1]):
-                    omonths[1] += m.total_temperature
-                    omonths_p[1] += m.total_precipitation
-                if (m.month == month_names[2]):
-                    omonths[2] += m.total_temperature
-                    omonths_p[2] += m.total_precipitation
-                if (m.month == month_names[3]):
-                    omonths[3] += m.total_temperature
-                    omonths_p[3] += m.total_precipitation
-                if (m.month == month_names[4]):
-                    omonths[4] += m.total_temperature
-                    omonths_p[4] += m.total_precipitation
-                if (m.month == month_names[5]):
-                    omonths[5] += m.total_temperature
-                    omonths_p[5] += m.total_precipitation
-                if (m.month == month_names[6]):
-                    omonths[6] += m.total_temperature
-                    omonths_p[6] += m.total_precipitation
-                if (m.month == month_names[7]):
-                    omonths[7] += m.total_temperature
-                    omonths_p[7] += m.total_precipitation
-                if (m.month == month_names[8]):
-                    omonths[8] += m.total_temperature
-                    omonths_p[8] += m.total_precipitation
-                if (m.month == month_names[9]):
-                    omonths[9] += m.total_temperature
-                    omonths_p[9] += m.total_precipitation
-                if (m.month == month_names[10]):
-                    omonths[10] += m.total_temperature
-                    omonths_p[10] += m.total_precipitation
-                if (m.month == month_names[11]):
-                    omonths[11] += m.total_temperature
-                    omonths_p[11] += m.total_precipitation
-            else:
-                if (m.month == month_names[0]):
-                    vmonths[0] += m.total_temperature
-                    j += 1
-                if (m.month == month_names[1]):
-                    vmonths[1] += m.total_temperature
-                    vmonths_p[1] += m.total_precipitation
-                if (m.month == month_names[2]):
-                    vmonths[2] += m.total_temperature
-                    vmonths_p[2] += m.total_precipitation
-                if (m.month == month_names[3]):
-                    vmonths[3] += m.total_temperature
-                    vmonths_p[3] += m.total_precipitation
-                if (m.month == month_names[4]):
-                    vmonths[4] += m.total_temperature
-                    vmonths_p[4] += m.total_precipitation
-                if (m.month == month_names[5]):
-                    vmonths[5] += m.total_temperature
-                    vmonths_p[5] += m.total_precipitation
-                if (m.month == month_names[6]):
-                    vmonths[6] += m.total_temperature
-                    vmonths_p[6] += m.total_precipitation
-                if (m.month == month_names[7]):
-                    vmonths[7] += m.total_temperature
-                    vmonths_p[7] += m.total_precipitation
-                if (m.month == month_names[8]):
-                    vmonths[8] += m.total_temperature
-                    vmonths_p[8] += m.total_precipitation
-                if (m.month == month_names[9]):
-                    vmonths[9] += m.total_temperature
-                    vmonths_p[9] += m.total_precipitation
-                if (m.month == month_names[10]):
-                    vmonths[10] += m.total_temperature
-                    vmonths_p[10] += m.total_precipitation
-                if (m.month == month_names[11]):
-                    vmonths[11] += m.total_temperature
-                    vmonths_p[11] += m.total_precipitation
+            if m.year.latitude != 0.0:
+                if (m.year.source_text == "Ottawa CDA"):
+                    if (m.month == month_names[0]):
+                        omonths[0] += m.total_temperature
+                        omonths_p[0] += m.total_precipitation
+                        i += 1
+                    if (m.month == month_names[1]):
+                        omonths[1] += m.total_temperature
+                        omonths_p[1] += m.total_precipitation
+                    if (m.month == month_names[2]):
+                        omonths[2] += m.total_temperature
+                        omonths_p[2] += m.total_precipitation
+                    if (m.month == month_names[3]):
+                        omonths[3] += m.total_temperature
+                        omonths_p[3] += m.total_precipitation
+                    if (m.month == month_names[4]):
+                        omonths[4] += m.total_temperature
+                        omonths_p[4] += m.total_precipitation
+                    if (m.month == month_names[5]):
+                        omonths[5] += m.total_temperature
+                        omonths_p[5] += m.total_precipitation
+                    if (m.month == month_names[6]):
+                        omonths[6] += m.total_temperature
+                        omonths_p[6] += m.total_precipitation
+                    if (m.month == month_names[7]):
+                        omonths[7] += m.total_temperature
+                        omonths_p[7] += m.total_precipitation
+                    if (m.month == month_names[8]):
+                        omonths[8] += m.total_temperature
+                        omonths_p[8] += m.total_precipitation
+                    if (m.month == month_names[9]):
+                        omonths[9] += m.total_temperature
+                        omonths_p[9] += m.total_precipitation
+                    if (m.month == month_names[10]):
+                        omonths[10] += m.total_temperature
+                        omonths_p[10] += m.total_precipitation
+                    if (m.month == month_names[11]):
+                        omonths[11] += m.total_temperature
+                        omonths_p[11] += m.total_precipitation
+                else:
+                    if (m.month == month_names[0]):
+                        vmonths[0] += m.total_temperature
+                        j += 1
+                    if (m.month == month_names[1]):
+                        vmonths[1] += m.total_temperature
+                        vmonths_p[1] += m.total_precipitation
+                    if (m.month == month_names[2]):
+                        vmonths[2] += m.total_temperature
+                        vmonths_p[2] += m.total_precipitation
+                    if (m.month == month_names[3]):
+                        vmonths[3] += m.total_temperature
+                        vmonths_p[3] += m.total_precipitation
+                    if (m.month == month_names[4]):
+                        vmonths[4] += m.total_temperature
+                        vmonths_p[4] += m.total_precipitation
+                    if (m.month == month_names[5]):
+                        vmonths[5] += m.total_temperature
+                        vmonths_p[5] += m.total_precipitation
+                    if (m.month == month_names[6]):
+                        vmonths[6] += m.total_temperature
+                        vmonths_p[6] += m.total_precipitation
+                    if (m.month == month_names[7]):
+                        vmonths[7] += m.total_temperature
+                        vmonths_p[7] += m.total_precipitation
+                    if (m.month == month_names[8]):
+                        vmonths[8] += m.total_temperature
+                        vmonths_p[8] += m.total_precipitation
+                    if (m.month == month_names[9]):
+                        vmonths[9] += m.total_temperature
+                        vmonths_p[9] += m.total_precipitation
+                    if (m.month == month_names[10]):
+                        vmonths[10] += m.total_temperature
+                        vmonths_p[10] += m.total_precipitation
+                    if (m.month == month_names[11]):
+                        vmonths[11] += m.total_temperature
+                        vmonths_p[11] += m.total_precipitation
 
         for k in range(len(omonths)):
             omonths[k] = omonths[k]/i
