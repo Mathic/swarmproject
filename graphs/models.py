@@ -46,6 +46,12 @@ class MonthsGraph(models.Model):
     def __str__(self):
         return str(self.month)
 
+class TestTable(models.Model):
+    test = models.CharField(max_length=10)
+
+    def __str__(self):
+        return str(self.test)
+
 class Month(models.Model):
     month = models.CharField(max_length=3)
     total_temperature = models.DecimalField(max_digits=5, decimal_places=2, default=0)
