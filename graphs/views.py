@@ -134,19 +134,23 @@ class ClimateData(APIView):
         i = j = avgTotalTempVictoria = avgTotalTempOttawa = 0
 
         for climate in climates:
-            print(climate.average_temperature)
+            # print(climate.average_temperature)
             if (climate.source_text == "Ottawa CDA"):
-                temperaturesOttawa.append(climate.average_temperature)
                 precipitationOttawa.append(climate.average_precipitation)
                 if climate.latitude != 0.0:
                     i += 1
                     sumTempO += climate.average_temperature
+                    temperaturesOttawa.append(climate.average_temperature)
+                else:
+                    temperaturesOttawa.append(None)
             else:
-                temperaturesVictoria.append(climate.average_temperature)
                 precipitationVictoria.append(climate.average_precipitation)
                 if climate.latitude != 0.0:
                     j += 1
                     sumTempV += climate.average_temperature
+                    temperaturesVictoria.append(climate.average_temperature)
+                else:
+                    temperaturesOttawa.append(None)
 
         if i != 0:
             avgTotalTempOttawa = sumTempO/i
@@ -154,11 +158,17 @@ class ClimateData(APIView):
             avgTotalTempVictoria = sumTempV/j
 
         for k in range(len(years)):
-            tempO[years[k]] = (temperaturesOttawa[k] - avgTotalTempOttawa)
+            if temperaturesOttawa[k] == None:
+                tempO[years[k]] = 0
+            else:
+                tempO[years[k]] = (temperaturesOttawa[k] - avgTotalTempOttawa)
             precO[years[k]] = precipitationOttawa[k]
 
         for k in range(len(temperaturesVictoria)):
-            tempV[years[k]] = (temperaturesVictoria[k] - avgTotalTempVictoria)
+            if temperaturesVictoria[k] == None:
+                tempV[years[k]] = 0
+            else:
+                tempV[years[k]] = (temperaturesVictoria[k] - avgTotalTempVictoria)
             precV[years[k]] = precipitationVictoria[k]
 
         data = {
@@ -411,7 +421,7 @@ def calculateYearlyAverage():
         avgTotalTempVictoria = sumTempV/j
 
     for k in range(len(years)):
-        print(years[k])
+        # print(years[k])
         y_update = YearsGraph.objects.filter(year=years[k])
         y_update.update(ottawa_average_t=(temperaturesOttawa[k] - avgTotalTempOttawa), ottawa_average_p=precipitationOttawa[k])
 
