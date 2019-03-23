@@ -137,7 +137,7 @@ class ClimateData(APIView):
                     sumTempO += climate.average_temperature
                     tempO[climate.graph_year] = climate.average_temperature
                 else:
-                    tempO[climate.graph_year] = None
+                    tempO[climate.graph_year] = 0
             else:
                 precV[climate.graph_year] = climate.average_precipitation
                 if climate.latitude != 0.0:
@@ -145,7 +145,7 @@ class ClimateData(APIView):
                     sumTempV += climate.average_temperature
                     tempV[climate.graph_year] = climate.average_temperature
                 else:
-                    tempV[climate.graph_year] = None
+                    tempV[climate.graph_year] = 0
 
         if i != 0:
             avgTotalTempOttawa = sumTempO/i
