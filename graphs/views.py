@@ -158,18 +158,20 @@ class ClimateData(APIView):
             avgTotalTempVictoria = sumTempV/j
 
         for k in range(len(years)):
-            if temperaturesOttawa[k] == None:
-                tempO[years[k]] = 0
-            else:
-                tempO[years[k]] = (temperaturesOttawa[k] - avgTotalTempOttawa)
-            precO[years[k]] = precipitationOttawa[k]
+            if k < len(temperaturesOttawa):
+                if temperaturesOttawa[k] == None:
+                    tempO[years[k]] = 0
+                else:
+                    tempO[years[k]] = (temperaturesOttawa[k] - avgTotalTempOttawa)
+                precO[years[k]] = precipitationOttawa[k]
 
-        for k in range(len(temperaturesVictoria)):
-            if temperaturesVictoria[k] == None:
-                tempV[years[k]] = 0
-            else:
-                tempV[years[k]] = (temperaturesVictoria[k] - avgTotalTempVictoria)
-            precV[years[k]] = precipitationVictoria[k]
+        for k in range(len(years)):
+            if k < len(temperaturesVictoria):
+                if temperaturesVictoria[k] == None:
+                    tempV[years[k]] = 0
+                else:
+                    tempV[years[k]] = (temperaturesVictoria[k] - avgTotalTempVictoria)
+                    precV[years[k]] = precipitationVictoria[k]
 
         data = {
             "climate_labels": years,

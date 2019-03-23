@@ -65,7 +65,7 @@ $(document).ready(function(){
       yaxis: {
         title: 'Temperature difference (°C)',
         rangemode: 'nonnegative',
-        range: [-4, 4],
+        range: [-2.5, 2.5],
         nticks: 5,
       }
     };
