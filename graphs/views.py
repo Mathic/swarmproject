@@ -121,10 +121,6 @@ class ClimateData(APIView):
     def get(self, request, format=None):
         climates = GraphData.objects.order_by('graph_year')
         years = climates.values_list('graph_year', flat=True).distinct()
-        temperaturesOttawa = []
-        precipitationOttawa = []
-        temperaturesVictoria = []
-        precipitationVictoria = []
 
         tempO = {el:0 for el in years}
         tempV = {el:0 for el in years}
@@ -134,44 +130,38 @@ class ClimateData(APIView):
         i = j = avgTotalTempVictoria = avgTotalTempOttawa = 0
 
         for climate in climates:
-            # print(climate.average_temperature)
             if (climate.source_text == "Ottawa CDA"):
-                precipitationOttawa.append(climate.average_precipitation)
+                precO[climate.graph_year] = climate.average_precipitation
                 if climate.latitude != 0.0:
                     i += 1
                     sumTempO += climate.average_temperature
-                    temperaturesOttawa.append(climate.average_temperature)
+                    tempO[climate.graph_year] = climate.average_temperature
                 else:
-                    temperaturesOttawa.append(None)
+                    tempO[climate.graph_year] = None
             else:
-                precipitationVictoria.append(climate.average_precipitation)
+                precV[climate.graph_year] = climate.average_precipitation
                 if climate.latitude != 0.0:
                     j += 1
                     sumTempV += climate.average_temperature
-                    temperaturesVictoria.append(climate.average_temperature)
+                    tempV[climate.graph_year] = climate.average_temperature
                 else:
-                    temperaturesOttawa.append(None)
+                    tempV[climate.graph_year] = None
 
         if i != 0:
             avgTotalTempOttawa = sumTempO/i
         if j != 0:
             avgTotalTempVictoria = sumTempV/j
 
-        for k in range(len(years)):
-            if k < len(temperaturesOttawa):
-                if temperaturesOttawa[k] == None:
-                    tempO[years[k]] = 0
-                else:
-                    tempO[years[k]] = (temperaturesOttawa[k] - avgTotalTempOttawa)
-                precO[years[k]] = precipitationOttawa[k]
+        for y in years:
+            if tempO[y] == 0:
+                tempO[y] = 0
+            else:
+                tempO[y] = tempO[y] - avgTotalTempOttawa
 
-        for k in range(len(years)):
-            if k < len(temperaturesVictoria):
-                if temperaturesVictoria[k] == None:
-                    tempV[years[k]] = 0
-                else:
-                    tempV[years[k]] = (temperaturesVictoria[k] - avgTotalTempVictoria)
-                    precV[years[k]] = precipitationVictoria[k]
+            if tempV[y] == 0:
+                tempV[y] = 0
+            else:
+                tempV[y] = tempV[y] - avgTotalTempVictoria
 
         data = {
             "climate_labels": years,
