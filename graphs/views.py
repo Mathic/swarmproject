@@ -153,12 +153,14 @@ class ClimateData(APIView):
             avgTotalTempVictoria = sumTempV/j
 
         for y in years:
-            if tempO[y] == 0 or tempO[y] is None:
+            print(isinstance(tempO[y], type(None)))
+            print(isinstance(tempV[y], type(None)))
+            if tempO[y] is None or tempO[y] == 0:
                 tempO[y] = 0
             else:
                 tempO[y] = tempO[y] - avgTotalTempOttawa
 
-            if tempV[y] == 0 or tempO[y] is None:
+            if tempO[y] is None or tempV[y] == 0:
                 tempV[y] = 0
             else:
                 tempV[y] = tempV[y] - avgTotalTempVictoria
