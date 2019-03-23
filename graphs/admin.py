@@ -6,5 +6,5 @@ from .models import *
 admin.site.register(Student)
 admin.site.register(GraphData)
 admin.site.register(Month)
-admin.site.register(YearlyAverage)
-admin.site.register(MonthlyAverage)
+admin.site.register(YearsGraph)
+admin.site.register(MonthsGraph)

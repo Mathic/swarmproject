@@ -26,7 +26,7 @@ class GraphData(models.Model):
     def __str__(self):
         return str(self.graph_year)
 
-class YearlyAverage(models.Model):
+class YearsGraph(models.Model):
     year = models.IntegerField()
     ottawa_average_t = models.DecimalField(max_digits=6, decimal_places=3, default=0)
     ottawa_average_p = models.DecimalField(max_digits=6, decimal_places=3, default=0)
@@ -36,7 +36,7 @@ class YearlyAverage(models.Model):
     def __str__(self):
         return str(self.year)
 
-class MonthlyAverage(models.Model):
+class MonthsGraph(models.Model):
     month = models.CharField(max_length=3)
     ottawa_average_t = models.DecimalField(max_digits=6, decimal_places=3, default=0)
     ottawa_average_p = models.DecimalField(max_digits=6, decimal_places=3, default=0)

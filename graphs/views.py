@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import GraphData, Student, Month, MonthlyAverage, YearlyAverage
+from .models import GraphData, Student, Month, YearsGraph, MonthsGraph
 
 # test method to create month for each year
 def test(request):
@@ -13,12 +13,12 @@ def test(request):
     distinct_years = years.distinct()
 
     for d in distinct_years:
-        ys = YearlyAverage.objects.all()
+        ys = YearsGraph.objects.all()
         if ys.filter(year=d.graph_year).first() == None:
             ys.create(year=d.graph_year)
 
     for t in twelve:
-        ms = MonthlyAverage.objects.all()
+        ms = MonthsGraph.objects.all()
         if ms.filter(month=t).first() == None:
             ms.create(month=t)
 
@@ -125,7 +125,7 @@ class ClimateData(APIView):
         precipitationVictoria = [None]*len(years)
 
         for i in range(len(years)):
-            y = YearlyAverage.objects.get(year=years[i])
+            y = YearsGraph.objects.get(year=years[i])
             tempDiffOttawa[i] = y.ottawa_average_t
             precipitationOttawa[i] = y.ottawa_average_p
             tempDiffVictoria[i] = y.victoria_average_t
@@ -144,7 +144,7 @@ class ClimateData(APIView):
 class MonthlyData(APIView):
 
     def get(self, request, format=None):
-        # months = MonthlyAverage.objects.all()
+        # months = MonthsGraph.objects.all()
         month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         # average monthly temperature ottawa
         omonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -156,7 +156,7 @@ class MonthlyData(APIView):
         vmonths_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         for i in range(len(month_names)):
-            m = MonthlyAverage.objects.get(month=month_names[i])
+            m = MonthsGraph.objects.get(month=month_names[i])
             omonths[i] = m.ottawa_average_t
             vmonths[i] = m.victoria_average_t
             omonths_p[i] = m.ottawa_average_p
@@ -259,12 +259,12 @@ def calculateMonthlyAverage():
                     vmonths_p[11] += m.total_precipitation
 
     for k in range(len(omonths)):
-        m_update = MonthlyAverage.objects.filter(month=month_names[k])
+        m_update = MonthsGraph.objects.filter(month=month_names[k])
         if i != 0:
             m_update.update(ottawa_average_t=omonths[k]/i, ottawa_average_p=omonths_p[k]/i)
 
     for k in range(len(vmonths)):
-        m_update = MonthlyAverage.objects.filter(month=month_names[k])
+        m_update = MonthsGraph.objects.filter(month=month_names[k])
         if j != 0:
             m_update.update(victoria_average_t=vmonths[k]/j, victoria_average_p=vmonths_p[k]/j)
 
@@ -299,9 +299,9 @@ def calculateYearlyAverage():
 
     for k in range(len(years)):
         print(years[k])
-        y_update = YearlyAverage.objects.filter(year=years[k])
+        y_update = YearsGraph.objects.filter(year=years[k])
         y_update.update(ottawa_average_t=(temperaturesOttawa[k] - avgTotalTempOttawa), ottawa_average_p=precipitationOttawa[k])
 
     for k in range(len(temperaturesVictoria)):
-        y_update = YearlyAverage.objects.filter(year=years[k])
+        y_update = YearsGraph.objects.filter(year=years[k])
         y_update.update(victoria_average_t=(temperaturesVictoria[k] - avgTotalTempVictoria), victoria_average_p=precipitationVictoria[k])
