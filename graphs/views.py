@@ -153,12 +153,12 @@ class ClimateData(APIView):
             avgTotalTempVictoria = sumTempV/j
 
         for y in years:
-            if tempO[y] == 0 or tempO[y] == None:
+            if tempO[y] == 0 or tempO[y] is None:
                 tempO[y] = 0
             else:
                 tempO[y] = tempO[y] - avgTotalTempOttawa
 
-            if tempV[y] == 0 or tempO[y] == None:
+            if tempV[y] == 0 or tempO[y] is None:
                 tempV[y] = 0
             else:
                 tempV[y] = tempV[y] - avgTotalTempVictoria
