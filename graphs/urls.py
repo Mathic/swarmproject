@@ -8,7 +8,7 @@ urlpatterns = [
 
     # page loaders
     path('', views.index, name='index'),
-    path('graphs', views.graphs, name='graphs'),
+    path('swarm', views.graphs, name='graphs'),
     path('data_ottawa', views.data_ottawa, name='data_ottawa'),
     path('data_victoria', views.data_victoria, name='data_victoria'),
     path('data_month', views.data_m, name='data_month'),
