@@ -1,0 +1,42 @@
+{% extends "graphs/base_template.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex justify-content-end">
+  <div class="alert alert-success col-3 col-md-3 col-sm-2 position-fixed" id="success-alert" style="display:none">
+    Finished loading!
+  </div>
+</div>
+
+<div class="d-flex justify-content-end">
+  <div class="alert alert-info col-3 col-md-3 col-sm-2 position-fixed" id="loading-alert" style="display:none">
+    Please wait... loading
+  </div>
+</div>
+
+<h1>Graphs</h1>
+<div class="row full-width">
+  <ul id="chartChooser" class="nav nav-pills col-2 flex-column">
+    <li class="nav-item">
+      <a id="api/chart/year_avg_temp" class="nav-link btn-outline-dark" href="#">Yearly Average Temperature</a>
+    </li>
+    <li class="nav-item">
+      <a id="api/chart/year_avg_prec" class="nav-link btn-outline-dark" href="#">Yearly Average Precipitation</a>
+    </li>
+    <li class="nav-item">
+      <a id="api/chart/month_avg_temp" class="nav-link btn-outline-dark" href="#">Monthly Average Temperature</a>
+    </li>
+    <li class="nav-item">
+      <a id="api/chart/month_avg_prec" class="nav-link btn-outline-dark" href="#">Monthly Average Precipitation</a>
+    </li>
+  </ul>
+
+  <div class="col-10">
+    <div id="plotlyChart" style="width:100%; height:800px;"></div>
+  </div>
+</div>
+
+<script type="text/javascript" src="{% static 'graphs/js/graph.js' %}"></script>
+
+{% endblock %}

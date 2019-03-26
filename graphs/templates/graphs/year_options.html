@@ -3,9 +3,9 @@
 {% if years %}
 <div class="form-group row">
   <label class="col-md-2 col-sm-2">Year</label>
-  <label class="col-md-3 col-sm-2">Average Temperature</label>
-  <label class="col-md-3 col-sm-2">Average Precipitation</label>
-  <label class="col-md-3 col-sm-2">Event</label>
+  <label class="col-md-2 col-sm-2">Average Temperature</label>
+  <label class="col-md-2 col-sm-2">Average Precipitation</label>
+  <label class="col-md-5 col-sm-2">Event</label>
 </div>
 
 
@@ -13,16 +13,16 @@
   {% for year in years %}
   <div id="{{ year.id }}" class="form-group row">
     <label for="inputYear{{ year.id }}" class="col-sm-2 col-form-label data">{{ year.graph_year }}</label>
-    <div class="col-md-3 col-sm-2">
+    <div class="col-md-2 col-sm-2">
       <input class="form-control data" id="inputTemp{{ year.id }}" placeholder="0" value="{{ year.average_temperature }}">
     </div>
-    <div class="col-md-3 col-sm-2">
+    <div class="col-md-2 col-sm-2">
       <input class="form-control data" id="inputPrecip{{ year.id }}" placeholder="0" value="{{ year.average_precipitation }}">
     </div>
-    <div class="col-md-3 col-sm-2">
-      <textarea class="form-control data" rows="3" cols="80" id="inputEvent{{ year.id }}" value="{{ year.event }}" style="resize: none">{{ year.event }}</textarea>
+    <div class="col-md-5 col-sm-2">
+      <textarea class="form-control data" rows="6" cols="80" id="inputEvent{{ year.id }}" value="{{ year.event }}" style="resize: none">{{ year.event }}</textarea>
     </div>
-
+    <br><br>
     <label for="inputMonthTemp{{ year.id }}" class="col-sm-2 col-form-label">Monthly Temperatures</label>
     <div class="col-md-9 col-sm-3">
       <input class="form-control temps" id="monthTemps{{ year.id }}" placeholder="0" value="{% for m in year.month_set.all %} {{ m.total_temperature }} {% endfor %}">
@@ -33,6 +33,12 @@
       <input class="form-control precips" id="monthPrecips{{ year.id }}" placeholder="0" value="{% for m in year.month_set.all %} {{ m.total_precipitation }} {% endfor %}">
     </div>
   </div>
+
+  <br>
+  <div class="col-md-9 col-sm-3">
+    Month order: <p>{% for m in year.month_set.all %}{{ m.month }}, {% endfor %}</p>
+  </div>
+
   <hr>
   {% endfor %}
 </div>

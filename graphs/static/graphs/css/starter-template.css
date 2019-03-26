@@ -16,6 +16,15 @@ body {
   user-select: none;
 }
 
+.full-width {
+  width: 100vw;
+  position: relative;
+  margin-left: -50vw;
+  height: 100px;
+  /* margin-top: 100px; */
+  left: 50%;
+}
+
 @media (min-width: 768px) {
   .bd-placeholder-img-lg {
     font-size: 3.5rem;
@@ -26,4 +35,4 @@ body {
 
 table  { border-collapse: collapse; width: 100%; }
 th, td { padding: 8px 16px; }
-th     { background:#eee; }
+th     { background:#000; }

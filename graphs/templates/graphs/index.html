@@ -2,28 +2,11 @@
 {% load static %}
 
 {% block content %}
-<div class="d-flex justify-content-end">
-  <div class="alert alert-success col-3 col-md-3 col-sm-2 position-fixed" id="success-alert" style="display:none">
-    Finished loading!
-  </div>
-</div>
-
-<div class="d-flex justify-content-end">
-  <div class="alert alert-info col-3 col-md-3 col-sm-2 position-fixed" id="loading-alert" style="display:none">
-    Please wait... loading
-  </div>
-</div>
-
 <div class="starter-template">
   <h1>TSES3002V Swarm Project Group A</h1>
-  <p class="lead">Yearly graphs of temperature and precipitation data from 1926-2018</p>
+  <p class="lead">
+    Yearly and monthly graphs of temperature and precipitation data from 1926-2018
+  </p>
 </div>
-
-<div class="row">
-  <div id="avgTemperatureChart" style="width:100%; height:800px;"></div>
-</div>
-<div id="precipitationChart" style="width:100%; height:800px;"></div>
-
-<script type="text/javascript" src="{% static 'graphs/js/graph.js' %}"></script>
 
 {% endblock %}

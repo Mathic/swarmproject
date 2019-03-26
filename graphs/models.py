@@ -26,6 +26,19 @@ class GraphData(models.Model):
     def __str__(self):
         return str(self.graph_year)
 
+class Month(models.Model):
+    month = models.CharField(max_length=3)
+    total_temperature = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    total_precipitation = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    year = models.ForeignKey(GraphData, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        return str(self.month)
+
+# unused, broken in Heroku PostGreSQL
 class YearsGraph(models.Model):
     year = models.IntegerField()
     ottawa_average_t = models.DecimalField(max_digits=6, decimal_places=3, default=0)
@@ -51,12 +64,3 @@ class TestTable(models.Model):
 
     def __str__(self):
         return str(self.test)
-
-class Month(models.Model):
-    month = models.CharField(max_length=3)
-    total_temperature = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    total_precipitation = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    year = models.ForeignKey(GraphData, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.month)
