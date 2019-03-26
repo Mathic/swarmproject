@@ -1,4 +1,4 @@
-from django.db.models import Avg
+from django.db.models import Avg, Q
 from django.shortcuts import render
 
 from rest_framework.response import Response
@@ -209,10 +209,10 @@ class MonthlyData(APIView):
         vmonths_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         for i in range(len(month_names)):
-            omonths[i] = Month.objects.filter(month=month_names[i],year__source_text="Ottawa CDA").aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
-            omonths_p[i] = Month.objects.filter(month=month_names[i],year__source_text="Ottawa CDA").aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
-            vmonths[i] = Month.objects.filter(month=month_names[i],year__source_text="Victoria Gonzales").aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
-            vmonths_p[i] = Month.objects.filter(month=month_names[i],year__source_text="Victoria Gonzales").aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+            omonths[i] = Month.objects.filter(~Q(year__latitude=0)).filter(month=month_names[i],year__source_text="Ottawa CDA").aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
+            omonths_p[i] = Month.objects.filter(~Q(year__latitude=0)).filter(month=month_names[i],year__source_text="Ottawa CDA").aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+            vmonths[i] = Month.objects.filter(~Q(year__latitude=0)).filter(month=month_names[i],year__source_text="Victoria Gonzales").aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
+            vmonths_p[i] = Month.objects.filter(~Q(year__latitude=0)).filter(month=month_names[i],year__source_text="Victoria Gonzales").aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
 
         data = {
             'month_names': month_names,
