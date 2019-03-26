@@ -231,8 +231,8 @@ class MonthAvgTemp(APIView):
 
         data = {
             'climate_labels': month_names,
-            'climate_data1': vmonths,
-            'climate_data2': omonths,
+            'climate_data1': omonths,
+            'climate_data2': vmonths,
         }
 
         print(data)
@@ -253,7 +253,7 @@ class MonthAvgPrec(APIView):
 
         data = {
             'climate_labels': month_names,
-            'climate_data1': vmonths,
-            'climate_data2': omonths,
+            'climate_data1': omonths,
+            'climate_data2': vmonths,
         }
         return Response(data)
