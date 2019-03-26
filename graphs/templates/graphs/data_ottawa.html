@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-
 <h1>Ottawa CDA</h1>
 <div class="tableFixHead">
   <table class="table table-sm table-striped scroll">
@@ -10,7 +9,7 @@
       <tr>
         <th scope="col" rowspan="2">Year</th>
         <th scope="col" colspan="2">Average</th>
-        <th scope="col" rowspan="2">Source</th>
+        <!-- <th scope="col" rowspan="2">Source</th> -->
         <th scope="col" rowspan="2">Latitude</th>
         <th scope="col" rowspan="2">Longitude</th>
         <th scope="col" rowspan="2">Event</th>
@@ -27,7 +26,7 @@
         <td>{{ year }}</td>
         <td>{{ year.average_temperature }}</td>
         <td>{{ year.average_precipitation }}</td>
-        <td>{{ year.source_text }}</td>
+        <!-- <td>{{ year.source_text }}</td> -->
         <td>{{ year.latitude }}</td>
         <td>{{ year.longitude }}</td>
         <td>{{ year.event }}</td>
@@ -36,40 +35,7 @@
     </tbody>
   </table>
 </div>
-<br><br>
-<h1>Victoria Gonzales</h1>
-<div class="tableFixHead">
-  <table class="table table-sm table-striped scroll">
-    <thead>
-      <tr>
-        <th scope="col" rowspan="2">Year</th>
-        <th scope="col" colspan="2">Average</th>
-        <th scope="col" rowspan="2">Source</th>
-        <th scope="col" rowspan="2">Latitude</th>
-        <th scope="col" rowspan="2">Longitude</th>
-        <th scope="col" rowspan="2">Event</th>
-      </tr>
-      <tr>
-        <th scope="col">Temperature</th>
-        <th scope="col">Precipitation</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for year in victoria %}
-      <!-- {{ year.student }} -->
-      <tr>
-        <td>{{ year }}</td>
-        <td>{{ year.average_temperature }}</td>
-        <td>{{ year.average_precipitation }}</td>
-        <td>{{ year.source_text }}</td>
-        <td>{{ year.latitude }}</td>
-        <td>{{ year.longitude }}</td>
-        <td>{{ year.event }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+
 <!-- {% for year in years %}
 {{ year.student }}
 {{ year }}
@@ -81,7 +47,5 @@
 {{ year.longitude }}
 {{ year.event }}
 {% endfor %} -->
-
-<script type="text/javascript" src="{% static 'graphs/js/data.js' %}"></script>
 
 {% endblock %}

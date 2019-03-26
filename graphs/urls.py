@@ -5,7 +5,8 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('month', views.monthly_graph, name='monthly_graph'),
-    path('data_year', views.data, name='data'),
+    path('data_ottawa', views.data_ottawa, name='data_ottawa'),
+    path('data_victoria', views.data_victoria, name='data_victoria'),
     path('data_month', views.data_m, name='data_m'),
     path('add', views.add_data, name='add_data'),
     path('test', views.test, name='test'),

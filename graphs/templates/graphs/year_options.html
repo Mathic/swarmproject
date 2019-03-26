@@ -1,11 +1,13 @@
 {% load static %}
 
+{% if years %}
 <div class="form-group row">
   <label class="col-md-2 col-sm-2">Year</label>
   <label class="col-md-3 col-sm-2">Average Temperature</label>
   <label class="col-md-3 col-sm-2">Average Precipitation</label>
   <label class="col-md-3 col-sm-2">Event</label>
 </div>
+
 
 <div id="years">
   {% for year in years %}
@@ -82,3 +84,5 @@
 </div>
 
 <script type="text/javascript" src="{% static 'graphs/js/add-data.js' %}"></script>
+
+{% endif %}

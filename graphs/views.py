@@ -28,11 +28,15 @@ def index(request):
 def monthly_graph(request):
     return render(request, 'graphs/monthly_graph.html', {'nbar': 'monthly_graph'})
 
-def data(request):
+def data_ottawa(request):
     ottawa = GraphData.objects.filter(source_text='Ottawa CDA').order_by('graph_year')
+
+    return render(request, 'graphs/data_ottawa.html', {'ottawa': ottawa, 'nbar': 'data'})
+
+def data_victoria(request):
     victoria = GraphData.objects.filter(source_text='Victoria Gonzales').order_by('graph_year')
 
-    return render(request, 'graphs/data.html', {'ottawa': ottawa, 'victoria': victoria, 'nbar': 'data'})
+    return render(request, 'graphs/data_victoria.html', {'victoria': victoria, 'nbar': 'data'})
 
 def data_m(request):
     years = GraphData.objects.order_by('graph_year').values_list('graph_year', flat=True).distinct()
@@ -40,19 +44,24 @@ def data_m(request):
     return render(request, 'graphs/data_m.html', {'years': years, 'nbar': 'data'})
 
 def load_months(request):
-    ottawa = []
-    victoria = []
+    ottawa = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    victoria = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     oevent = vevent = ''
     year = request.GET.get('year')
-    years = GraphData.objects.filter(graph_year=year)
 
-    for y in years:
-        if y.source_text == 'Ottawa CDA':
-            ottawa = Month.objects.filter(year=y.id)
-            oevent = y.event
-        else:
-            victoria = Month.objects.filter(year=y.id)
-            vevent = y.event
+    if year != '---------':
+        years = GraphData.objects.filter(graph_year=year)
+
+        for y in years:
+            months = y.month_set.all()
+            for m in months:
+                this_month = Month.objects.filter(year=year, month=m)
+                if y.source_text == 'Ottawa CDA':
+                    ottawa[month_chooser(m.month)] = Month.objects.get(year=y, month=m, year__source_text="Ottawa CDA")
+                    oevent = y.event
+                else:
+                    victoria[month_chooser(m.month)] = Month.objects.get(year=y, month=m, year__source_text="Victoria Gonzales")
+                    vevent = y.event
 
     return render(request, 'graphs/month_options.html', {'ottawa': ottawa, 'victoria': victoria, 'oevent': oevent, 'vevent': vevent})
 
@@ -64,9 +73,15 @@ def add_data(request):
 
 def load_years(request):
     student_id = request.GET.get('student')
-    years = GraphData.objects.filter(student=student_id).order_by('graph_year')
+    years = []
+    source = ''
+    if student_id != '---------':
+        years = GraphData.objects.filter(student=student_id).order_by('graph_year')
 
-    return render(request, 'graphs/year_options.html', {'years': years, 'source': years[0]})
+    if len(years) != 0:
+        return render(request, 'graphs/year_options.html', {'years': years, 'source': years[0]})
+    else:
+        return render(request, 'graphs/year_options.html')
 
 def save_data(request):
     student_id = request.GET.get('student_id')
