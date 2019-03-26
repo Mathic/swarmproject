@@ -20,7 +20,7 @@ class GraphData(models.Model):
     source_text = models.CharField(max_length=50, null=True, blank=True)
     latitude = models.DecimalField(max_digits=6, decimal_places=3, default=0)
     longitude = models.DecimalField(max_digits=6, decimal_places=3, default=0)
-    event = models.CharField(max_length=500, null=True, blank=True)
+    event = models.CharField(max_length=1000, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     def __str__(self):
