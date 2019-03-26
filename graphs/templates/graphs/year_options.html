@@ -23,21 +23,25 @@
       <textarea class="form-control data" rows="6" cols="80" id="inputEvent{{ year.id }}" value="{{ year.event }}" style="resize: none">{{ year.event }}</textarea>
     </div>
     <br><br>
+
+    {% with monthset=year.month_set.all %}
     <label for="inputMonthTemp{{ year.id }}" class="col-sm-2 col-form-label">Monthly Temperatures</label>
     <div class="col-md-9 col-sm-3">
-      <input class="form-control temps" id="monthTemps{{ year.id }}" placeholder="0" value="{% for m in year.month_set.all %} {{ m.total_temperature }} {% endfor %}">
+      <input class="form-control temps" id="monthTemps{{ year.id }}" placeholder="0" value="{% for m in monthset %} {{ m.total_temperature }} {% endfor %}">
     </div>
     <br><br>
     <label for="inputMonthPrecip{{ year.id }}" class="col-sm-2 col-form-label">Monthly Precipitation</label>
     <div class="col-md-9 col-sm-3">
-      <input class="form-control precips" id="monthPrecips{{ year.id }}" placeholder="0" value="{% for m in year.month_set.all %} {{ m.total_precipitation }} {% endfor %}">
+      <input class="form-control precips" id="monthPrecips{{ year.id }}" placeholder="0" value="{% for m in monthset %} {{ m.total_precipitation }} {% endfor %}">
     </div>
   </div>
 
   <br>
+
   <div class="col-md-9 col-sm-3">
-    Month order: <p>{% for m in year.month_set.all %}{{ m.month }}, {% endfor %}</p>
+    Month order: <p>{% for m in monthset %}{{ m.month }}, {% endfor %}</p>
   </div>
+  {% endwith %}
 
   <hr>
   {% endfor %}
