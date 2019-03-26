@@ -1,36 +1,24 @@
+from django.db.models import Avg
 from django.shortcuts import render
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import GraphData, Student, Month
-# , YearsGraph, MonthsGraph
+
+month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 # test method to create month for each year
 def test(request):
-    twelve = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     years = GraphData.objects.order_by('graph_year')
 
     distinct_years = years.distinct()
 
-    # for d in distinct_years:
-    #     ys = YearsGraph.objects.all()
-    #     if ys.filter(year=d.graph_year).first() == None:
-    #         ys.create(year=d.graph_year)
-
-    # for t in twelve:
-    #     ms = MonthsGraph.objects.all()
-    #     if ms.filter(month=t).first() == None:
-    #         ms.create(month=t)
-
     for y in years:
         months = y.month_set.all()
-        for t in twelve:
+        for t in month_names:
             if months.filter(month=t).first() == None:
                 month_instance = Month.objects.create(month=t, year=y)
-
-    # calculateMonthlyAverage()
-    # calculateYearlyAverage()
 
     return render(request, 'graphs/test.html')
 
@@ -87,34 +75,61 @@ def save_data(request):
     temps = list(request.GET.getlist('temps[]'))
     precips = list(request.GET.getlist('precips[]'))
 
-    years = GraphData.objects.filter(student=student_id)
+    years = GraphData.objects.filter(student=student_id).order_by('graph_year')
     first_year = years.filter(graph_year=climates[0])
     second_year = years.filter(graph_year=climates[4])
     third_year = years.filter(graph_year=climates[8])
-
-    first_months = Month.objects.filter(year=first_year)
-    temp1 = temps[0].split() + temps[1].split() + temps[2].split()
-    precip1 = precips[0].split() + precips[1].split() + precips[2].split()
-
     i = 0
 
     for y in years:
-        months = y.month_set.all()
-        for m in months:
-            this_month = Month.objects.filter(year=y, month=m)
-            this_temp = float(this_month.values_list('total_temperature', flat=True)[0])
-            this_precip = float(this_month.values_list('total_precipitation', flat=True)[0])
-            if (this_temp - float(temp1[i])) != 0.0:
-                this_month.update(total_temperature=float(temp1[i]))
-            if (this_precip - float(precip1[i])) != 0.0:
-                this_month.update(total_precipitation=float(precip1[i]))
-            i += 1
+        update_months(y, temps[i].split(), precips[i].split())
+        i += 1
 
     first_year.update(average_temperature=climates[1], average_precipitation=climates[2], event=climates[3], latitude=climates[12], longitude=climates[13], source_text=source)
     second_year.update(average_temperature=climates[5], average_precipitation=climates[6], event=climates[7], latitude=climates[12], longitude=climates[13], source_text=source)
     third_year.update(average_temperature=climates[9], average_precipitation=climates[10], event=climates[11], latitude=climates[12], longitude=climates[13], source_text=source)
 
     return render(request, 'graphs/add_data.html')
+
+def update_months(year, temps, precips):
+    months = year.month_set.all()
+    for m in months:
+        this_month = Month.objects.filter(year=year, month=m)
+        this_temp = float(this_month.values_list('total_temperature', flat=True)[0])
+        this_precip = float(this_month.values_list('total_precipitation', flat=True)[0])
+        new_temp = float(temps[month_chooser(m.month)])
+        new_precip = float(precips[month_chooser(m.month)])
+
+        if (this_temp - new_temp) != 0.0:
+            this_month.update(total_temperature=new_temp)
+        if (this_precip - new_precip) != 0.0:
+            this_month.update(total_precipitation=new_precip)
+
+def month_chooser(mon):
+    if mon == month_names[0]:
+        return 0
+    if mon == month_names[1]:
+        return 1
+    if mon == month_names[2]:
+        return 2
+    if mon == month_names[3]:
+        return 3
+    if mon == month_names[4]:
+        return 4
+    if mon == month_names[5]:
+        return 5
+    if mon == month_names[6]:
+        return 6
+    if mon == month_names[7]:
+        return 7
+    if mon == month_names[8]:
+        return 8
+    if mon == month_names[9]:
+        return 9
+    if mon == month_names[10]:
+        return 10
+    if mon == month_names[11]:
+        return 11
 
 class ClimateData(APIView):
 
@@ -126,8 +141,8 @@ class ClimateData(APIView):
         tempV = {el:0 for el in years}
         precO = {el:0 for el in years}
         precV = {el:0 for el in years}
-        sumTempV = sumTempO = 0
-        i = j = avgTotalTempVictoria = avgTotalTempOttawa = 0
+        sumTempV = sumTempO = i = j = 0
+        avgTotalTempVictoria = avgTotalTempOttawa = 0
 
         for climate in climates:
             if (climate.source_text == "Ottawa CDA"):
@@ -152,24 +167,14 @@ class ClimateData(APIView):
         if j != 0:
             avgTotalTempVictoria = sumTempV/j
 
-        for y in years:
-            print(isinstance(tempO[y], type(None)))
-            print(isinstance(tempV[y], type(None)))
-            if tempO[y] is None or tempO[y] == 0:
-                tempO[y] = 0
-            else:
-                tempO[y] = tempO[y] - avgTotalTempOttawa
-
-            if tempO[y] is None or tempV[y] == 0:
-                tempV[y] = 0
-            else:
-                tempV[y] = tempV[y] - avgTotalTempVictoria
+        newTempO = {k:v - avgTotalTempOttawa for (k,v) in tempO.items() if v != 0}
+        newTempV = {k:v - avgTotalTempVictoria for (k,v) in tempV.items() if v != 0}
 
         data = {
             "climate_labels": years,
-            "climate_data1": list(tempO.values()),
+            "climate_data1": list(newTempO.values()),
             "climate_data2": list(precO.values()),
-            "climate_data3": list(tempV.values()),
+            "climate_data3": list(newTempV.values()),
             "climate_data4": list(precV.values())
         }
 
@@ -179,7 +184,6 @@ class MonthlyData(APIView):
 
     def get(self, request, format=None):
         months = Month.objects.all()
-        month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         # average monthly temperature ottawa
         omonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         # average monthly temperature victoria
@@ -189,95 +193,11 @@ class MonthlyData(APIView):
         # average monthly precipitation victoria
         vmonths_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        i = j = 0
-
-        for m in months:
-            if m.year.latitude != 0.0:
-                if (m.year.source_text == "Ottawa CDA"):
-                    if (m.month == month_names[0]):
-                        omonths[0] += m.total_temperature
-                        omonths_p[0] += m.total_precipitation
-                        i += 1
-                    if (m.month == month_names[1]):
-                        omonths[1] += m.total_temperature
-                        omonths_p[1] += m.total_precipitation
-                    if (m.month == month_names[2]):
-                        omonths[2] += m.total_temperature
-                        omonths_p[2] += m.total_precipitation
-                    if (m.month == month_names[3]):
-                        omonths[3] += m.total_temperature
-                        omonths_p[3] += m.total_precipitation
-                    if (m.month == month_names[4]):
-                        omonths[4] += m.total_temperature
-                        omonths_p[4] += m.total_precipitation
-                    if (m.month == month_names[5]):
-                        omonths[5] += m.total_temperature
-                        omonths_p[5] += m.total_precipitation
-                    if (m.month == month_names[6]):
-                        omonths[6] += m.total_temperature
-                        omonths_p[6] += m.total_precipitation
-                    if (m.month == month_names[7]):
-                        omonths[7] += m.total_temperature
-                        omonths_p[7] += m.total_precipitation
-                    if (m.month == month_names[8]):
-                        omonths[8] += m.total_temperature
-                        omonths_p[8] += m.total_precipitation
-                    if (m.month == month_names[9]):
-                        omonths[9] += m.total_temperature
-                        omonths_p[9] += m.total_precipitation
-                    if (m.month == month_names[10]):
-                        omonths[10] += m.total_temperature
-                        omonths_p[10] += m.total_precipitation
-                    if (m.month == month_names[11]):
-                        omonths[11] += m.total_temperature
-                        omonths_p[11] += m.total_precipitation
-                else:
-                    if (m.month == month_names[0]):
-                        vmonths[0] += m.total_temperature
-                        j += 1
-                    if (m.month == month_names[1]):
-                        vmonths[1] += m.total_temperature
-                        vmonths_p[1] += m.total_precipitation
-                    if (m.month == month_names[2]):
-                        vmonths[2] += m.total_temperature
-                        vmonths_p[2] += m.total_precipitation
-                    if (m.month == month_names[3]):
-                        vmonths[3] += m.total_temperature
-                        vmonths_p[3] += m.total_precipitation
-                    if (m.month == month_names[4]):
-                        vmonths[4] += m.total_temperature
-                        vmonths_p[4] += m.total_precipitation
-                    if (m.month == month_names[5]):
-                        vmonths[5] += m.total_temperature
-                        vmonths_p[5] += m.total_precipitation
-                    if (m.month == month_names[6]):
-                        vmonths[6] += m.total_temperature
-                        vmonths_p[6] += m.total_precipitation
-                    if (m.month == month_names[7]):
-                        vmonths[7] += m.total_temperature
-                        vmonths_p[7] += m.total_precipitation
-                    if (m.month == month_names[8]):
-                        vmonths[8] += m.total_temperature
-                        vmonths_p[8] += m.total_precipitation
-                    if (m.month == month_names[9]):
-                        vmonths[9] += m.total_temperature
-                        vmonths_p[9] += m.total_precipitation
-                    if (m.month == month_names[10]):
-                        vmonths[10] += m.total_temperature
-                        vmonths_p[10] += m.total_precipitation
-                    if (m.month == month_names[11]):
-                        vmonths[11] += m.total_temperature
-                        vmonths_p[11] += m.total_precipitation
-
-        for k in range(len(omonths)):
-            if i != 0:
-                omonths[k] = omonths[k]/i
-                omonths_p[k] = omonths_p[k]/i
-
-        for k in range(len(vmonths)):
-            if j != 0:
-                vmonths[k] = vmonths[k]/j
-                vmonths_p[k] = vmonths_p[k]/j
+        for i in range(len(month_names)):
+            omonths[i] = Month.objects.filter(month=month_names[i],year__source_text="Ottawa CDA").aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
+            omonths_p[i] = Month.objects.filter(month=month_names[i],year__source_text="Ottawa CDA").aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+            vmonths[i] = Month.objects.filter(month=month_names[i],year__source_text="Victoria Gonzales").aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
+            vmonths_p[i] = Month.objects.filter(month=month_names[i],year__source_text="Victoria Gonzales").aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
 
         data = {
             'month_names': month_names,
@@ -287,138 +207,3 @@ class MonthlyData(APIView):
             'omonths_p': omonths_p,
         }
         return Response(data)
-
-def calculateMonthlyAverage():
-    months = Month.objects.all()
-    month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    i = j = 0
-    omonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    vmonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    omonths_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    vmonths_p = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-    for m in months:
-        if m.year.latitude != 0.0:
-            if (m.year.source_text == "Ottawa CDA"):
-                if (m.month == month_names[0]):
-                    omonths[0] += m.total_temperature
-                    omonths_p[0] += m.total_precipitation
-                    i += 1
-                if (m.month == month_names[1]):
-                    omonths[1] += m.total_temperature
-                    omonths_p[1] += m.total_precipitation
-                if (m.month == month_names[2]):
-                    omonths[2] += m.total_temperature
-                    omonths_p[2] += m.total_precipitation
-                if (m.month == month_names[3]):
-                    omonths[3] += m.total_temperature
-                    omonths_p[3] += m.total_precipitation
-                if (m.month == month_names[4]):
-                    omonths[4] += m.total_temperature
-                    omonths_p[4] += m.total_precipitation
-                if (m.month == month_names[5]):
-                    omonths[5] += m.total_temperature
-                    omonths_p[5] += m.total_precipitation
-                if (m.month == month_names[6]):
-                    omonths[6] += m.total_temperature
-                    omonths_p[6] += m.total_precipitation
-                if (m.month == month_names[7]):
-                    omonths[7] += m.total_temperature
-                    omonths_p[7] += m.total_precipitation
-                if (m.month == month_names[8]):
-                    omonths[8] += m.total_temperature
-                    omonths_p[8] += m.total_precipitation
-                if (m.month == month_names[9]):
-                    omonths[9] += m.total_temperature
-                    omonths_p[9] += m.total_precipitation
-                if (m.month == month_names[10]):
-                    omonths[10] += m.total_temperature
-                    omonths_p[10] += m.total_precipitation
-                if (m.month == month_names[11]):
-                    omonths[11] += m.total_temperature
-                    omonths_p[11] += m.total_precipitation
-            else:
-                if (m.month == month_names[0]):
-                    vmonths[0] += m.total_temperature
-                    j += 1
-                if (m.month == month_names[1]):
-                    vmonths[1] += m.total_temperature
-                    vmonths_p[1] += m.total_precipitation
-                if (m.month == month_names[2]):
-                    vmonths[2] += m.total_temperature
-                    vmonths_p[2] += m.total_precipitation
-                if (m.month == month_names[3]):
-                    vmonths[3] += m.total_temperature
-                    vmonths_p[3] += m.total_precipitation
-                if (m.month == month_names[4]):
-                    vmonths[4] += m.total_temperature
-                    vmonths_p[4] += m.total_precipitation
-                if (m.month == month_names[5]):
-                    vmonths[5] += m.total_temperature
-                    vmonths_p[5] += m.total_precipitation
-                if (m.month == month_names[6]):
-                    vmonths[6] += m.total_temperature
-                    vmonths_p[6] += m.total_precipitation
-                if (m.month == month_names[7]):
-                    vmonths[7] += m.total_temperature
-                    vmonths_p[7] += m.total_precipitation
-                if (m.month == month_names[8]):
-                    vmonths[8] += m.total_temperature
-                    vmonths_p[8] += m.total_precipitation
-                if (m.month == month_names[9]):
-                    vmonths[9] += m.total_temperature
-                    vmonths_p[9] += m.total_precipitation
-                if (m.month == month_names[10]):
-                    vmonths[10] += m.total_temperature
-                    vmonths_p[10] += m.total_precipitation
-                if (m.month == month_names[11]):
-                    vmonths[11] += m.total_temperature
-                    vmonths_p[11] += m.total_precipitation
-
-    for k in range(len(omonths)):
-        m_update = MonthsGraph.objects.filter(month=month_names[k])
-        if i != 0:
-            m_update.update(ottawa_average_t=omonths[k]/i, ottawa_average_p=omonths_p[k]/i)
-
-    for k in range(len(vmonths)):
-        m_update = MonthsGraph.objects.filter(month=month_names[k])
-        if j != 0:
-            m_update.update(victoria_average_t=vmonths[k]/j, victoria_average_p=vmonths_p[k]/j)
-
-def calculateYearlyAverage():
-    climates = GraphData.objects.order_by('graph_year')
-    years = climates.values_list('graph_year', flat=True).distinct()
-    temperaturesOttawa = []
-    precipitationOttawa = []
-    temperaturesVictoria = []
-    precipitationVictoria = []
-    sumTempV = sumTempO = 0
-    i = j = avgTotalTempVictoria = avgTotalTempOttawa = 0
-
-    for climate in climates:
-        if (climate.source_text == "Ottawa CDA"):
-            temperaturesOttawa.append(climate.average_temperature)
-            precipitationOttawa.append(climate.average_precipitation)
-            if climate.latitude != 0.0:
-                i += 1
-                sumTempO += climate.average_temperature
-        else:
-            temperaturesVictoria.append(climate.average_temperature)
-            precipitationVictoria.append(climate.average_precipitation)
-            if climate.latitude != 0.0:
-                j += 1
-                sumTempV += climate.average_temperature
-
-    if i != 0:
-        avgTotalTempOttawa = sumTempO/i
-    if j != 0:
-        avgTotalTempVictoria = sumTempV/j
-
-    for k in range(len(years)):
-        # print(years[k])
-        y_update = YearsGraph.objects.filter(year=years[k])
-        y_update.update(ottawa_average_t=(temperaturesOttawa[k] - avgTotalTempOttawa), ottawa_average_p=precipitationOttawa[k])
-
-    for k in range(len(temperaturesVictoria)):
-        y_update = YearsGraph.objects.filter(year=years[k])
-        y_update.update(victoria_average_t=(temperaturesVictoria[k] - avgTotalTempVictoria), victoria_average_p=precipitationVictoria[k])
