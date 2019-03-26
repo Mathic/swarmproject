@@ -167,8 +167,8 @@ class ClimateData(APIView):
         if j != 0:
             avgTotalTempVictoria = sumTempV/j
 
-        newTempO = {k:v - avgTotalTempOttawa for (k,v) in tempO.items() if v != 0}
-        newTempV = {k:v - avgTotalTempVictoria for (k,v) in tempV.items() if v != 0}
+        newTempO = {k:v - avgTotalTempOttawa if v != 0 else v for (k,v) in tempO.items()}
+        newTempV = {k:v - avgTotalTempVictoria if v != 0 else v for (k,v) in tempV.items()}
 
         data = {
             "climate_labels": years,
