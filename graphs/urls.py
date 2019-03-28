@@ -22,6 +22,6 @@ urlpatterns = [
     # graph APIs
     path('api/chart/year_avg_temp', views.YearAvgTemp.as_view(), name='year_avg_temp'),
     path('api/chart/year_avg_prec', views.YearAvgPrec.as_view(), name='year_avg_prec'),
-    path('api/chart/month_avg_temp', views.MonthAvgTemp.as_view(), name='month_avg_temp'),
-    path('api/chart/month_avg_prec', views.MonthAvgPrec.as_view(), name='month_avg_prec'),
+    path('api/chart/ottawa_monthly', views.OttawaMonthly.as_view(), name='ottawa_monthly'),
+    path('api/chart/victoria_monthly', views.VictoriaMonthly.as_view(), name='victoria_monthly'),
 ]

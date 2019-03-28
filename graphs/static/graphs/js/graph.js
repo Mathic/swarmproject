@@ -13,7 +13,6 @@ $(document).ready(function(){
     target = event.target.id;
     var a = document.getElementById(target);
     $(a).addClass('active').parent().siblings().children().removeClass('active');
-    console.log(a);
 
     switch(target) {
       case 'api/chart/year_avg_temp':
@@ -22,11 +21,11 @@ $(document).ready(function(){
       case 'api/chart/year_avg_prec':
         callAjax(target, yearlyAvgPrec);
         break;
-      case 'api/chart/month_avg_temp':
-        callAjax(target, monthlyAvgTemp);
+      case 'api/chart/ottawa_monthly':
+        callAjax(target, ottawaMonthly);
         break;
-      case 'api/chart/month_avg_prec':
-        callAjax(target, monthlyAvgPrec);
+      case 'api/chart/victoria_monthly':
+        callAjax(target, victoriaMonthly);
         break;
     };
   };
@@ -40,6 +39,8 @@ $(document).ready(function(){
         climateLabels = data.climate_labels
         climateData1 = data.climate_data1
         climateData2 = data.climate_data2
+        ottawaAverage = data.ottawa_average
+        victoriaAverage = data.victoria_average
 
         callFunction();
         $("#loading-alert").hide();
@@ -84,7 +85,7 @@ $(document).ready(function(){
     var data = [trace1, trace3];
 
     var layout = {
-      title: "Yearly average temperature compared to the 1929-2018 average (at 0°C)",
+      title: "Yearly average temperature compared to the 1926-2018 Ottawa average (at " + ottawaAverage + "°C) and the 1929-2018 Victoria average (at " + victoriaAverage + "°C)",
       legend: {
         title: 'Year',
         x: 0.25,
@@ -151,13 +152,21 @@ $(document).ready(function(){
     Plotly.newPlot('plotlyChart', data, layout, {responsive: true})
   };
 
-  function monthlyAvgTemp(){
+  function ottawaMonthly(){
+    plotlyClimateDiagram("Ontario Climate Diagram - monthly averages from 1926-2018");
+  };
+
+  function victoriaMonthly(){
+    plotlyClimateDiagram("Victoria Climate Diagram - monthly averages from 1929-2018");
+  };
+
+  function plotlyClimateDiagram(title){
     var trace1 = {
       x: climateLabels,
       y: climateData1,
       type: 'scatter',
       mode: 'lines+markers',
-      name: 'Ottawa',
+      name: 'Temperature',
       marker: {
         size: 8,
         "dash": "solid",
@@ -166,47 +175,13 @@ $(document).ready(function(){
       },
     }
 
-    var trace3 = {
+    var trace2 = {
       x: climateLabels,
       y: climateData2,
       type: 'scatter',
       mode: 'lines+markers',
-      name: 'Victoria',
-      marker: {
-        size: 8,
-        "dash": "solid",
-        "color": "rgb(255,140,0)",
-        "width": 2
-      },
-    }
-
-    var data = [trace1, trace3];
-
-    var layout = {
-      title: "Monthly average temperature from 1929-2018",
-      legend: {
-        title: 'Month',
-        x: 0.25,
-        y: 1
-      },
-      yaxis: {
-        title: 'Temperature (°C)',
-        rangemode: 'nonnegative',
-        range: [-30, 30],
-        nticks: 5,
-      }
-    };
-
-    Plotly.newPlot('plotlyChart', data, layout, {responsive: true})
-  };
-
-  function monthlyAvgPrec(){
-    var trace2 = {
-      x: climateLabels,
-      y: climateData1,
-      type: 'scatter',
-      mode: 'lines+markers',
-      name: 'Ottawa',
+      name: 'Precipitation',
+      yaxis: 'y2',
       marker: {
         size: 8,
         "dash": "solid",
@@ -215,34 +190,26 @@ $(document).ready(function(){
       },
     }
 
-    var trace4 = {
-      x: climateLabels,
-      y: climateData2,
-      type: 'scatter',
-      mode: 'lines+markers',
-      name: 'Victoria',
-      marker: {
-        size: 8,
-        "dash": "solid",
-        "color": "rgb(100,118,248)",
-        "width": 2
-      },
-    }
-
-    var data = [trace2, trace4];
+    var data = [trace1, trace2];
 
     var layout = {
-      title: "Monthly average precipitation from 1929-2018",
+      title: title,
       legend: {
         title: 'Month',
         x: 0.25,
         y: 1
       },
       yaxis: {
+        title: 'Temperature (C)',
+        rangemode: 'nonnegative',
+        range: [-20, 80],
+        nticks: 11,
+      },
+      yaxis2: {
         title: 'Precipitation (mm)',
-        side: 'left',
+        side: 'right',
         overlaying: 'y',
-        range: [0, 140],
+        range: [-40, 160],
         nticks: 11,
       }
     };

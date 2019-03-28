@@ -22,11 +22,6 @@ $("#addData").click(function() {
     precips.push($(this).val())
   });
 
-  console.log("temps")
-  console.log(temps)
-  console.log("precips")
-  console.log(precips)
-
   $.ajax({
     url: url,
     data: {

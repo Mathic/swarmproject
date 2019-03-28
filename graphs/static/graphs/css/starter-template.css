@@ -2,6 +2,10 @@ body {
   padding-top: 5rem;
 }
 
+h2 {
+  font-size: 2vw;
+}
+
 .starter-template {
   padding: 3rem 1.5rem;
   text-align: center;

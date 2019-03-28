@@ -52,12 +52,12 @@ def add_data(request):
 
 # ajax requests
 def load_months(request):
-    ottawa = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    victoria = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    oevent = vevent = ''
     year = request.GET.get('year')
 
     if year != '---------':
+        ottawa = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        victoria = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        oevent = vevent = ''
         years = GraphData.objects.filter(graph_year=year)
 
         for y in years:
@@ -71,16 +71,15 @@ def load_months(request):
                     victoria[month_chooser(m.month)] = Month.objects.get(year=y, month=m, year__source_text="Victoria Gonzales")
                     vevent = y.event
 
-    return render(request, 'graphs/month_options.html', {'ottawa': ottawa, 'victoria': victoria, 'oevent': oevent, 'vevent': vevent})
+        return render(request, 'graphs/month_options.html', {'ottawa': ottawa, 'victoria': victoria, 'oevent': oevent, 'vevent': vevent})
+    else:
+        return render(request, 'graphs/month_options.html')
 
 def load_years(request):
     student_id = request.GET.get('student')
     years = []
-    source = ''
     if student_id != '---------':
         years = GraphData.objects.filter(student=student_id).order_by('graph_year')
-
-    if len(years) != 0:
         return render(request, 'graphs/year_options.html', {'years': years, 'source': years[0]})
     else:
         return render(request, 'graphs/year_options.html')
@@ -110,13 +109,13 @@ def save_data(request):
 
 # helper functions
 def update_months(year, temps, precips):
-    months = year.month_set.all()
-    for m in months:
+
+    for m in month_names:
         this_month = Month.objects.filter(year=year, month=m)
         this_temp = float(this_month.values_list('total_temperature', flat=True)[0])
         this_precip = float(this_month.values_list('total_precipitation', flat=True)[0])
-        new_temp = float(temps[month_chooser(m.month)])
-        new_precip = float(precips[month_chooser(m.month)])
+        new_temp = float(temps[month_chooser(m)])
+        new_precip = float(precips[month_chooser(m)])
 
         if (this_temp - new_temp) != 0.0:
             this_month.update(total_temperature=new_temp)
@@ -185,10 +184,13 @@ class YearAvgTemp(APIView):
         newTempO = {k:v - avgTotalTempOttawa if v != 0 else v for (k,v) in tempO.items()}
         newTempV = {k:v - avgTotalTempVictoria if v != 0 else v for (k,v) in tempV.items()}
 
+        print(avgTotalTempVictoria)
         data = {
             "climate_labels": years,
             "climate_data1": list(newTempO.values()),
             "climate_data2": list(newTempV.values()),
+            "ottawa_average": float('%0.2f'%avgTotalTempOttawa),
+            "victoria_average": float('%0.2f'%avgTotalTempVictoria)
         }
 
         return Response(data)
@@ -216,44 +218,32 @@ class YearAvgPrec(APIView):
 
         return Response(data)
 
-class MonthAvgTemp(APIView):
+class OttawaMonthly(APIView):
 
     def get(self, request, format=None):
-        months = Month.objects.all()
-        # average monthly temperature ottawa
-        omonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        # average monthly temperature victoria
-        vmonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        return Response(climateDiagram("Ottawa CDA"))
 
-        for i in range(len(month_names)):
-            omonths[i] = Month.objects.filter(~Q(year__average_precipitation=0)).filter(month=month_names[i],year__source_text="Ottawa CDA").aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
-            vmonths[i] = Month.objects.filter(~Q(year__average_precipitation=0)).filter(month=month_names[i],year__source_text="Victoria Gonzales").aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
-
-        data = {
-            'climate_labels': month_names,
-            'climate_data1': omonths,
-            'climate_data2': vmonths,
-        }
-
-        print(data)
-        return Response(data)
-
-class MonthAvgPrec(APIView):
+class VictoriaMonthly(APIView):
 
     def get(self, request, format=None):
-        months = Month.objects.all()
-        # average monthly precipitation ottawa
-        omonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        # average monthly precipitation victoria
-        vmonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        return Response(climateDiagram("Victoria Gonzales"))
 
-        for i in range(len(month_names)):
-            omonths[i] = Month.objects.filter(~Q(year__average_precipitation=0)).filter(month=month_names[i],year__source_text="Ottawa CDA").aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
-            vmonths[i] = Month.objects.filter(~Q(year__average_precipitation=0)).filter(month=month_names[i],year__source_text="Victoria Gonzales").aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+def climateDiagram(source):
+    # average monthly precipitation ottawa
+    temps = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # average monthly precipitation victoria
+    precs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        data = {
-            'climate_labels': month_names,
-            'climate_data1': omonths,
-            'climate_data2': vmonths,
-        }
-        return Response(data)
+    s = Month.objects.filter(~Q(year__average_precipitation=0)).filter(year__source_text=source)
+
+    for i in range(len(month_names)):
+        temps[i] = s.filter(month=month_names[i]).aggregate(Avg('total_temperature'))['total_temperature__avg'] or 0
+        precs[i] = s.filter(month=month_names[i]).aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+
+    data = {
+        'climate_labels': month_names,
+        'climate_data1': temps,
+        'climate_data2': precs,
+    }
+
+    return data
