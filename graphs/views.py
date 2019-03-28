@@ -184,7 +184,6 @@ class YearAvgTemp(APIView):
         newTempO = {k:v - avgTotalTempOttawa if v != 0 else v for (k,v) in tempO.items()}
         newTempV = {k:v - avgTotalTempVictoria if v != 0 else v for (k,v) in tempV.items()}
 
-        print(avgTotalTempVictoria)
         data = {
             "climate_labels": years,
             "climate_data1": list(newTempO.values()),

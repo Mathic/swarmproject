@@ -85,7 +85,7 @@ $(document).ready(function(){
     var data = [trace1, trace3];
 
     var layout = {
-      title: "Yearly average temperature compared to the 1926-2018 Ottawa average (at " + ottawaAverage + "°C) and the 1929-2018 Victoria average (at " + victoriaAverage + "°C)",
+      title: "Yearly average temperature compared to the 1926-2018 Ottawa average (at " + ottawaAverage + "°C) and the 1926-2018 Victoria average (at " + victoriaAverage + "°C)",
       legend: {
         title: 'Year',
         x: 0.25,
@@ -153,11 +153,11 @@ $(document).ready(function(){
   };
 
   function ottawaMonthly(){
-    plotlyClimateDiagram("Ontario Climate Diagram - monthly averages from 1926-2018");
+    plotlyClimateDiagram("Ottawa Climate Diagram - monthly averages from 1926-2018");
   };
 
   function victoriaMonthly(){
-    plotlyClimateDiagram("Victoria Climate Diagram - monthly averages from 1929-2018");
+    plotlyClimateDiagram("Victoria Climate Diagram - monthly averages from 1926-2018");
   };
 
   function plotlyClimateDiagram(title){
