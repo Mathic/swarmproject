@@ -18,9 +18,6 @@ $(document).ready(function(){
       case 'api/chart/year_avg_temp':
         callAjax(target, yearlyAvgTemp);
         break;
-      // case 'api/chart/year_avg_prec':
-      //   callAjax(target, yearlyAvgPrec);
-      //   break;
       case 'api/chart/ottawa_seasonal':
         callAjax(target, ottawaSeasonal);
         break;
@@ -307,7 +304,7 @@ $(document).ready(function(){
         title: 'Precipitation (mm)',
         side: 'left',
         overlaying: 'y',
-        range: [0, 140],
+        range: [0, 200],
         nticks: 11,
       }
     };
