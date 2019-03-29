@@ -194,28 +194,15 @@ class YearAvgTemp(APIView):
 
         return Response(data)
 
-class YearAvgPrec(APIView):
+class OttawaSeasonalAvgPrec(APIView):
 
-    def get(self, request, format=None):
-        climates = GraphData.objects.order_by('graph_year')
-        years = climates.values_list('graph_year', flat=True).distinct()
+    def get(self, request, forma=None):
+        return Response(seasonalDiagram("Ottawa CDA"))
 
-        precO = {el:0 for el in years}
-        precV = {el:0 for el in years}
+class VictoriaSeasonalAvgPrec(APIView):
 
-        for climate in climates:
-            if (climate.source_text == "Ottawa CDA"):
-                precO[climate.graph_year] = climate.average_precipitation
-            else:
-                precV[climate.graph_year] = climate.average_precipitation
-
-        data = {
-            "climate_labels": years,
-            "climate_data1": list(precO.values()),
-            "climate_data2": list(precV.values())
-        }
-
-        return Response(data)
+    def get(self, request, forma=None):
+        return Response(seasonalDiagram("Victoria Gonzales"))
 
 class OttawaMonthly(APIView):
 
@@ -243,6 +230,37 @@ def climateDiagram(source):
         'climate_labels': month_names,
         'climate_data1': temps,
         'climate_data2': precs,
+    }
+
+    return data
+
+def seasonalDiagram(source):
+    winter = ['Jan', 'Feb', 'Dec']
+    spring = ['Mar', 'Apr', 'May']
+    summer = ['Jun', 'Jul', 'Aug']
+    autumn = ['Sep', 'Oct', 'Nov']
+    climates = GraphData.objects.order_by('graph_year').filter(source_text=source)
+    years = climates.values_list('graph_year', flat=True).distinct()
+    s = Month.objects.filter(~Q(year__average_precipitation=0)).filter(year__source_text=source)
+
+    data1 = {el:0 for el in years}
+    data2 = {el:0 for el in years}
+    data3 = {el:0 for el in years}
+    data4 = {el:0 for el in years}
+
+    for climate in climates:
+        data1[climate.graph_year] = s.filter(month__in=winter, year__graph_year=climate.graph_year).aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+        print(data1)
+        data2[climate.graph_year] = s.filter(month__in=spring, year__graph_year=climate.graph_year).aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+        data3[climate.graph_year] = s.filter(month__in=summer, year__graph_year=climate.graph_year).aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+        data4[climate.graph_year] = s.filter(month__in=autumn, year__graph_year=climate.graph_year).aggregate(Avg('total_precipitation'))['total_precipitation__avg'] or 0
+
+    data = {
+        'climate_labels': years,
+        'climate_data1': list(data1.values()),
+        'climate_data2': list(data2.values()),
+        'climate_data3': list(data3.values()),
+        'climate_data4': list(data4.values())
     }
 
     return data

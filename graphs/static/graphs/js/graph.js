@@ -18,8 +18,14 @@ $(document).ready(function(){
       case 'api/chart/year_avg_temp':
         callAjax(target, yearlyAvgTemp);
         break;
-      case 'api/chart/year_avg_prec':
-        callAjax(target, yearlyAvgPrec);
+      // case 'api/chart/year_avg_prec':
+      //   callAjax(target, yearlyAvgPrec);
+      //   break;
+      case 'api/chart/ottawa_seasonal':
+        callAjax(target, ottawaSeasonal);
+        break;
+      case 'api/chart/victoria_seasonal':
+        callAjax(target, victoriaSeasonal);
         break;
       case 'api/chart/ottawa_monthly':
         callAjax(target, ottawaMonthly);
@@ -39,6 +45,12 @@ $(document).ready(function(){
         climateLabels = data.climate_labels
         climateData1 = data.climate_data1
         climateData2 = data.climate_data2
+
+        if(data.climate_data3 !== undefined) {
+          climateData3 = data.climate_data3
+          climateData4 = data.climate_data4
+        }
+
         ottawaAverage = data.ottawa_average
         victoriaAverage = data.victoria_average
 
@@ -152,6 +164,14 @@ $(document).ready(function(){
     Plotly.newPlot('plotlyChart', data, layout, {responsive: true})
   };
 
+  function ottawaSeasonal(){
+    plotlySeasonal("Ottawa Seasonal Average Precipitation 1926-2018");
+  };
+
+  function victoriaSeasonal(){
+    plotlySeasonal("Victoria Seasonal Average Precipitation 1926-2018");
+  };
+
   function ottawaMonthly(){
     plotlyClimateDiagram("Ottawa Climate Diagram - monthly averages from 1926-2018");
   };
@@ -216,4 +236,82 @@ $(document).ready(function(){
 
     Plotly.newPlot('plotlyChart', data, layout, {responsive: true})
   };
+
+  function plotlySeasonal(title) {
+    var trace1 = {
+      x: climateLabels,
+      y: climateData1,
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Winter',
+      marker: {
+        size: 8,
+        "dash": "solid",
+        "color": "rgb(158,202,225)",
+        "width": 2
+      },
+    }
+
+    var trace2 = {
+      x: climateLabels,
+      y: climateData2,
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Spring',
+      marker: {
+        size: 8,
+        "dash": "solid",
+        "color": "rgb(107,174,214)",
+        "width": 2
+      },
+    }
+
+    var trace3 = {
+      x: climateLabels,
+      y: climateData3,
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Summer',
+      marker: {
+        size: 8,
+        "dash": "solid",
+        "color": "rgb(49,130,189)",
+        "width": 2
+      },
+    }
+
+    var trace4 = {
+      x: climateLabels,
+      y: climateData4,
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Fall',
+      marker: {
+        size: 8,
+        "dash": "solid",
+        "color": "rgb(8,81,156)",
+        "width": 2
+      },
+    }
+
+    var data = [trace1, trace2, trace3, trace4];
+
+    var layout = {
+      title: title,
+      legend: {
+        title: 'Year',
+        x: 0.25,
+        y: 1
+      },
+      yaxis: {
+        title: 'Precipitation (mm)',
+        side: 'left',
+        overlaying: 'y',
+        range: [0, 140],
+        nticks: 11,
+      }
+    };
+
+    Plotly.newPlot('plotlyChart', data, layout, {responsive: true})
+  }
 });
