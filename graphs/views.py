@@ -32,17 +32,17 @@ def graphs(request):
 def data_ottawa(request):
     ottawa = GraphData.objects.filter(source_text='Ottawa CDA').order_by('graph_year')
 
-    return render(request, 'graphs/data_ottawa.html', {'ottawa': ottawa, 'nbar': 'data'})
+    return render(request, 'graphs/data_ottawa.html', {'ottawa': ottawa, 'nbar': 'data_oy'})
 
 def data_victoria(request):
     victoria = GraphData.objects.filter(source_text='Victoria Gonzales').order_by('graph_year')
 
-    return render(request, 'graphs/data_victoria.html', {'victoria': victoria, 'nbar': 'data'})
+    return render(request, 'graphs/data_victoria.html', {'victoria': victoria, 'nbar': 'data_vy'})
 
 def data_m(request):
     years = GraphData.objects.order_by('graph_year').values_list('graph_year', flat=True).distinct()
 
-    return render(request, 'graphs/data_m.html', {'years': years, 'nbar': 'data'})
+    return render(request, 'graphs/data_m.html', {'years': years, 'nbar': 'data_m'})
 
 def add_data(request):
     names = Student.objects.all()

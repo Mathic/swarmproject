@@ -6,7 +6,7 @@
   <meta property="og:url"                content="https://swarmproject.herokuapp.com/graphs/" />
   <meta property="og:type"               content="website" />
   <meta property="og:title"              content="TSES3002 Group A Swarm Project" />
-  <meta property="og:description"        content="Average temperature and precipitation per year in Ottawa" />
+  <meta property="og:description"        content="Average temperature and precipitation per year in Ottawa and Victoria" />
   <meta property="og:image"              content="{% static 'graphs/img/yt_graph.png' %}" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
@@ -40,16 +40,20 @@
         <li class="nav-item {% if nbar == 'graphs' %}active{% endif %}">
           <a class="nav-link" href="{% url 'graphs' %}">Graphs<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item dropdown {% if nbar == 'data' %}active{% endif %}">
+        <!-- <li class="nav-item dropdown {% if nbar == 'data' %}active{% endif %}">
           <a class="nav-link dropdown-toggle" href="#" id="dropdowndata" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Data</a>
           <div class="dropdown-menu" aria-labelledby="dropdowndata">
-            <a class="dropdown-item" href="{% url 'data_ottawa' %}">Ottawa Yearly Data</a>
-            <a class="dropdown-item" href="{% url 'data_victoria' %}">Victoria Yearly Data</a>
-            <a class="dropdown-item" href="{% url 'data_month' %}">Monthly Data</a>
+
           </div>
+        </li> -->
+        <li class="nav-item {% if nbar == 'data_oy' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'data_ottawa' %}">Ottawa Yearly Data</a>
         </li>
-        <li class="nav-item {% if nbar == 'add' %}active{% endif %}">
-          <a class="nav-link" href="{% url 'add_data' %}">Add</a>
+        <li class="nav-item {% if nbar == 'data_vy' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'data_victoria' %}">Victoria Yearly Data</a>
+        </li>
+        <li class="nav-item {% if nbar == 'data_m' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'data_month' %}">Monthly Data</a>
         </li>
       </ul>
     </div>
