@@ -12,7 +12,7 @@ urlpatterns = [
     path('data_ottawa', views.data_ottawa, name='data_ottawa'),
     path('data_victoria', views.data_victoria, name='data_victoria'),
     path('data_month', views.data_m, name='data_month'),
-    path('add', views.add_data, name='add_data'),
+    path('add1', views.add_data, name='add_data'),
     # for base template:
     # <!-- <li class="nav-item {% if nbar == 'add' %}active{% endif %}">
     # <a class="nav-link" href="{% url 'add_data' %}">Add</a>
