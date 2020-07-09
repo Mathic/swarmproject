@@ -1,7 +1,7 @@
 $(document).ready(function(){
   var ul = document.getElementById('chartChooser');
   var target = '';
-  var climeLabels = []
+  var climateLabels = []
   var climateData1 = climateData2 = []
 
   if(target == '') {
